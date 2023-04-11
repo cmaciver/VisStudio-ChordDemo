@@ -76,6 +76,8 @@ public class AudioController
         bool down = gamepad.dpad.down.isPressed; // C (1)
         bool left = gamepad.dpad.left.isPressed; // D (2)
 
+        string rootPos;
+
         if (up || right || down || left) {
             if (down) // C
                 rootPitch = 1f;
@@ -102,21 +104,15 @@ public class AudioController
             else if (rsLeft)
                 rootPitch /= pitch.semitone;
 
-            bool lsDead = gamepad.leftStick.ReadValue().magnitude < 0.4f;
-            bool lsVert = Mathf.Abs(gamepad.leftStick.y.ReadValue()) >= Mathf.Abs(gamepad.leftStick.x.ReadValue());
-            bool lsUp = !lsDead && gamepad.leftStick.y.ReadValue() > 0.0f && lsVert;
-            bool lsDown = !lsDead && gamepad.leftStick.y.ReadValue() < -0.0f && lsVert;
-            bool lsRight = !lsDead && gamepad.leftStick.x.ReadValue() > 0.0f && !lsVert;
-            bool lsLeft = !lsDead && gamepad.leftStick.x.ReadValue() < -0.0f && !lsVert;
-
-            if (lsUp)
-                rootPitch *= pitch.p8 * pitch.p8;
-            else if (lsDown)
-                rootPitch /= pitch.p8 * pitch.p8;
-            else if (lsRight)
-                rootPitch *= pitch.p8;
-            else if (lsLeft)
-                rootPitch /= pitch.p8;
+            Chord.RootLocation rootLoc;
+            if (rootPitch < 1.02930223664f)
+                rootLoc = Chord.RootLocation.BbC;
+            else if (rootPitch < 1.2240535433f)
+                rootLoc = Chord.RootLocation.DbEb;
+            else if (rootPitch < 1.45565318284f)
+                rootLoc = Chord.RootLocation.EGb;
+            else
+                rootLoc = Chord.RootLocation.GA;
 
             bool north = gamepad.buttonNorth.isPressed;
             bool east = gamepad.buttonEast.isPressed;
@@ -162,6 +158,7 @@ public class AudioController
                 rootPitch * thirdMult,
                 rootPitch * fifthMult,
                 rootPitch * topMult,
+                rootLoc,
                 seventh
             );
 
@@ -199,14 +196,16 @@ public class AudioController
 
 public class Chord
 {
+    public enum RootLocation { BbC, DbEb, EGb, GA }
     public enum SeventhType { Diminished, Minor, Major, None }
 
-    public Chord(float root, float third, float fifth, float top, SeventhType seventh)
+    public Chord(float root, float third, float fifth, float top, RootLocation rootLoc, SeventhType seventh)
     {
         Root = root;
         Third = third;
         Fifth = fifth;
         Top = top;
+        RootLoc = rootLoc;
         Seventh = seventh;
     }
 
@@ -214,5 +213,6 @@ public class Chord
     public float Third { get; }
     public float Fifth { get; }
     public float Top { get; }
+    public RootLocation RootLoc { get; }
     public SeventhType Seventh { get; }
 }

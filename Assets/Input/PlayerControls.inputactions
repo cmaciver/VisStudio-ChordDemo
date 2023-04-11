@@ -70,7 +70,7 @@
                 {
                     "name": "up",
                     "id": "0f9cfd51-40d3-419c-a4ec-467e6ed3b6f6",
-                    "path": "<Gamepad>/rightStick/up",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4",
@@ -81,7 +81,7 @@
                 {
                     "name": "down",
                     "id": "5606f252-e152-476d-8ba1-0a0d033b8957",
-                    "path": "<Gamepad>/rightStick/down",
+                    "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4",
@@ -92,7 +92,7 @@
                 {
                     "name": "left",
                     "id": "01efbdb6-167c-45de-9d85-e1ac0dd14fc1",
-                    "path": "<Gamepad>/rightStick/left",
+                    "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4",
@@ -103,7 +103,7 @@
                 {
                     "name": "right",
                     "id": "22231d3c-bda2-4fb9-90ce-c004441a265e",
-                    "path": "<Gamepad>/rightStick/right",
+                    "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4",
