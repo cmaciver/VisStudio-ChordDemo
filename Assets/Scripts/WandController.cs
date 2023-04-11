@@ -96,7 +96,7 @@ public class WandController : MonoBehaviour
     {
         float[] voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
                                         chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
-                                        chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
+                                        chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
 
         switch (chord.RootLoc)
         {

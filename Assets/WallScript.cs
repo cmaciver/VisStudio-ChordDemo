@@ -10,7 +10,7 @@ public class WallScript : MonoBehaviour
     [SerializeField]
     private AudioSource source;
 
-    private float[] volume = {0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.65f, 0.6f, 0.55f, 0.5f };
+    private float[] volume = {0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f };
 
     private bool primed = true;
 
