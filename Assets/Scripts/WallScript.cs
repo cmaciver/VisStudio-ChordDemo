@@ -10,7 +10,7 @@ public class WallScript : MonoBehaviour
     [SerializeField]
     private AudioSource source;
 
-    private float[] volume = {0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f };
+    private float[] volume = {0.8f, 0.8f, 0.8f, 0.8f, 0.7f, 0.7f, 0.7f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f };
 
     private bool primed = true;
 
@@ -38,7 +38,7 @@ public class WallScript : MonoBehaviour
     {
         source.pitch = pitchMult[wallNumber];
         //source.Play();
-        StartCoroutine(FadeAudioSource.StartFade(source, 0.5f, volume[wallNumber])); // TODO LATER, PLAY
+        StartCoroutine(FadeAudioSource.StartFade(source, 0.25f, volume[wallNumber])); // TODO LATER, PLAY
     }
 
     public void Reprime()
@@ -48,7 +48,7 @@ public class WallScript : MonoBehaviour
 
     public void StopAudio()
     {
-        StartCoroutine(FadeAudioSource.StartFade(source, 1f, 0));  // TODO THIS DOES NOT WORK PROBABLY
+        StartCoroutine(FadeAudioSource.StartFade(source, .25f, 0));  // TODO THIS DOES NOT WORK PROBABLY
         //source.Stop();
     }
 

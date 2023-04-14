@@ -37,7 +37,7 @@
                 {
                     "name": "",
                     "id": "22e25e80-726b-4383-a938-86ece47b9ec6",
-                    "path": "<DualShockGamepad>/start",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4",
