@@ -41,8 +41,15 @@ public class WandController : MonoBehaviour
                 float[] pitchMult = GetVoicing(chord);
 
                 foreach (GameObject wall in walls)
-                    wall.GetComponent<WallScript>().PlayAudio(pitchMult);
+                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult);
             }
+        }
+
+        // LT Release
+        if (gamepad.leftShoulder.wasReleasedThisFrame && !gamepad.leftTrigger.isPressed)
+        {
+            foreach (GameObject wall in walls)
+                wall.GetComponent<WallScript>().Reprime();
         }
 
         // LT Press
@@ -59,7 +66,7 @@ public class WandController : MonoBehaviour
             }
         }
 
-        // LT Hold
+        // LT Held
         if (gamepad.leftTrigger.isPressed && activeWall != null)
         {
             if (pitchMult == null)
@@ -73,7 +80,7 @@ public class WandController : MonoBehaviour
         }
 
         // LT Release
-        if (gamepad.leftTrigger.wasReleasedThisFrame)
+        if (gamepad.leftTrigger.wasReleasedThisFrame && !gamepad.leftShoulder.isPressed)
         {
             foreach (GameObject wall in walls)
                 wall.GetComponent<WallScript>().Reprime();
@@ -132,9 +139,9 @@ public class WandController : MonoBehaviour
                 switch (chord.Seventh)
                 {
                     case Chord.SeventhType.None:
-                        //voicing = new float[] { chord.Root / 8, chord.Root / 4,  chord.Fifth / 4, chord.Third / 2,
-                        //                        chord.Root,     chord.Fifth,     chord.Third * 2, chord.Fifth * 2,
-                        //                        chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
+                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
+                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
+                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
                         break;
 
                     case Chord.SeventhType.Major:
@@ -154,9 +161,9 @@ public class WandController : MonoBehaviour
                 switch (chord.Seventh)
                 {
                     case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 8, chord.Root / 4,  chord.Fifth / 4, chord.Third / 2,
-                                                chord.Root,     chord.Fifth,     chord.Third * 2, chord.Fifth * 2,
-                                                chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
+                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
+                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
+                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
                         break;
 
                     case Chord.SeventhType.Major:
@@ -176,9 +183,9 @@ public class WandController : MonoBehaviour
                 switch (chord.Seventh)
                 {
                     case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 8, chord.Root / 4,  chord.Fifth / 4, chord.Third / 2,
-                                                chord.Root,     chord.Fifth,     chord.Third * 2, chord.Fifth * 2,
-                                                chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
+                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
+                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
+                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
                         break;
 
                     case Chord.SeventhType.Major:
@@ -196,7 +203,7 @@ public class WandController : MonoBehaviour
                 } break;
         }
 
-        print("this");
+        //print("this");
         return voicing;
     }
 }
