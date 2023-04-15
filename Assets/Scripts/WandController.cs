@@ -7,6 +7,8 @@ public class WandController : MonoBehaviour
 {
     private GameObject[] walls;
 
+    private GameObject bassWall;
+
     private AudioController ac;
 
     private GameObject activeWall = null;
@@ -19,6 +21,8 @@ public class WandController : MonoBehaviour
         ac = new(AudioController.Tuning.Equal);
 
         walls = GameObject.FindGameObjectsWithTag("SoundWall");
+
+        bassWall = GameObject.FindGameObjectWithTag("BassWall");
     }
 
     // Update is called once per frame
@@ -34,7 +38,9 @@ public class WandController : MonoBehaviour
             if (chord == null)
             {
                 foreach (GameObject wall in walls)
-                    wall.GetComponent<WallScript>().StopAudio();
+                    wall.GetComponent<WallScript>().StopPrimed();
+
+                bassWall.GetComponent<BassWallScript>().StopAudio();
             }
             else
             {
@@ -42,11 +48,13 @@ public class WandController : MonoBehaviour
 
                 foreach (GameObject wall in walls)
                     wall.GetComponent<WallScript>().PlayPrimed(pitchMult);
+                
+                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
             }
         }
 
-        // LT Release
-        if (gamepad.leftShoulder.wasReleasedThisFrame && !gamepad.leftTrigger.isPressed)
+        // LS Release
+        if (gamepad.leftShoulder.wasReleasedThisFrame && !gamepad.leftTrigger.isPressed) // COME BACK TO ME
         {
             foreach (GameObject wall in walls)
                 wall.GetComponent<WallScript>().Reprime();
@@ -63,6 +71,10 @@ public class WandController : MonoBehaviour
             else
             {
                 pitchMult = GetVoicing(chord);
+                if (!gamepad.rightTrigger.isPressed) // RT NOT Held
+                {
+                    bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+                }
             }
         }
 
@@ -71,7 +83,7 @@ public class WandController : MonoBehaviour
         {
             if (pitchMult == null)
             {
-                activeWall.GetComponent<WallScript>().StopAudio();
+                activeWall.GetComponent<WallScript>().StopPrimed();
             }
             else
             {
@@ -84,6 +96,19 @@ public class WandController : MonoBehaviour
         {
             foreach (GameObject wall in walls)
                 wall.GetComponent<WallScript>().Reprime();
+        }
+
+        // RS Press
+        if (gamepad.rightShoulder.wasPressedThisFrame)
+        {
+            Chord chord = ac.GetChord(gamepad);
+            if (chord == null)
+            {
+                bassWall.GetComponent<BassWallScript>().StopAudio();
+            } else
+            {
+                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+            }
         }
     }
 

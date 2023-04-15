@@ -12,6 +12,7 @@ TagManager:
   - Camera 3
   - Camera 2
   - SoundWall
+  - BassWall
   layers:
   - Default
   - TransparentFX

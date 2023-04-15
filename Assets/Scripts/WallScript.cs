@@ -18,7 +18,7 @@ public class WallScript : MonoBehaviour
 
     private bool currentIsFirst = true;
 
-    private float[] volume = {0.8f, 0.8f, 0.8f, 0.8f, 0.7f, 0.7f, 0.7f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f };
+    private float[] volume = {0.775f, 0.75f, 0.725f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f, 0.575f, 0.55f, 0.525f, 0.5f };
 
     private bool primed = true;
 
@@ -63,7 +63,7 @@ public class WallScript : MonoBehaviour
             currentIsFirst = false;
         }
 
-        StartCoroutine(FadeAudioSource.StartFade(currentSource, 0.5f, 0)); // TODO LATER, PLAY
+        StartCoroutine(FadeAudioSource.StartFade(currentSource, 0.5f, 0));
 
         currentSource = currentIsFirst ? sources[1] : sources[0];
         currentIsFirst = !currentIsFirst;
@@ -80,17 +80,21 @@ public class WallScript : MonoBehaviour
 
     public void StopAudio()
     {
+        StopAllCoroutines();
+        StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));
+        currentSource = currentIsFirst ? sources[1] : sources[0];
+        currentIsFirst = !currentIsFirst;
+        StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));
+    }
+
+    public void StopPrimed()
+    {
         if (primed)
         {
-            StopAllCoroutines();
-            StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));  // TODO THIS DOES NOT WORK PROBABLY
-            currentSource = currentIsFirst ? sources[1] : sources[0];
-            currentIsFirst = !currentIsFirst;
-            StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));
+            StopAudio();
         }
 
         primed = false;
-        //source.Stop();
     }
 
     // code borrowed from online, fades audio out
