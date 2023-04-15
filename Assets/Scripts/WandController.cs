@@ -108,102 +108,62 @@ public class WandController : MonoBehaviour
         switch (chord.RootLoc)
         {
             case Chord.RootLocation.BbC:
-                switch (chord.Seventh)
-                {
-                    case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
-                                                chord.Third, chord.Fifth, chord.Root * 2, chord.Third * 2,
-                                                chord.Fifth * 2, chord.Root * 4, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
-                        break;
-
-                    case Chord.SeventhType.Major:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
-                                                chord.Third, chord.Fifth, chord.Top, chord.Third * 2,
-                                                chord.Fifth * 2, chord.Top * 2, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
-                        break;
-
-                    case Chord.SeventhType.Minor:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
-                                                chord.Third, chord.Fifth, chord.Top, chord.Third * 2,
-                                                chord.Fifth * 2, chord.Top * 2, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
-                        break;
-
-                    case Chord.SeventhType.Diminished:
-                        voicing = new float[] { chord.Root / 8, chord.Root / 4,  chord.Fifth / 4, chord.Third / 2,
-                                                chord.Root,     chord.Fifth,     chord.Third * 2, chord.Fifth * 2,
-                                                chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
-                        break;
-
-                } break;
+                voicing = new float[] { chord.Root / 2, chord.Third / 2,  chord.Fifth / 2, chord.Top / 2, // LOWEST Bb2
+                                        chord.Root    , chord.Third    ,  chord.Fifth    , chord.Top    ,
+                                        chord.Root * 2, chord.Third * 2,  chord.Fifth * 2, chord.Top * 2};  // HIGHEST C6
+                break;
+            
             case Chord.RootLocation.DbEb:
-                switch (chord.Seventh)
-                {
-                    case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
-                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
-                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
-                        break;
+                voicing = new float[] { chord.Top / 4, chord.Root / 2, chord.Third / 2,  chord.Fifth / 2, // LOWEST Bb2
+                                        chord.Top / 2, chord.Root    , chord.Third    ,  chord.Fifth    ,
+                                        chord.Top    , chord.Root * 2, chord.Third * 2,  chord.Fifth * 2}; // HIGHEST Bb5
+                break;
 
-                    case Chord.SeventhType.Major:
-                        //voicing = { };
-                        break;
-
-                    case Chord.SeventhType.Minor:
-
-                        break;
-
-                    case Chord.SeventhType.Diminished:
-
-                        break;
-
-                } break;
             case Chord.RootLocation.EGb:
-                switch (chord.Seventh)
-                {
-                    case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
-                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
-                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
-                        break;
+                voicing = new float[] { chord.Fifth / 4, chord.Top / 4, chord.Root / 2, chord.Third / 2, // LOWEST B2
+                                        chord.Fifth / 2, chord.Top / 2, chord.Root    , chord.Third    ,
+                                        chord.Fifth    , chord.Top    , chord.Root * 2, chord.Third * 2}; // HIGHEST Bb5
+                break;
 
-                    case Chord.SeventhType.Major:
-                        //voicing = { };
-                        break;
-
-                    case Chord.SeventhType.Minor:
-
-                        break;
-
-                    case Chord.SeventhType.Diminished:
-
-                        break;
-
-                } break;
             case Chord.RootLocation.GA:
-                switch (chord.Seventh)
-                {
-                    case Chord.SeventhType.None:
-                        voicing = new float[] { chord.Root / 4, chord.Root / 2,  chord.Fifth / 2, chord.Third,
-                                                chord.Fifth,    chord.Root * 2,  chord.Third * 2, chord.Fifth * 2,
-                                                chord.Top * 2,  chord.Third * 4, chord.Fifth * 4, chord.Top * 4};
-                        break;
-
-                    case Chord.SeventhType.Major:
-                        //voicing = { };
-                        break;
-
-                    case Chord.SeventhType.Minor:
-
-                        break;
-
-                    case Chord.SeventhType.Diminished:
-
-                        break;
-
-                } break;
+                voicing = new float[] { chord.Third / 4, chord.Fifth / 4, chord.Top / 4, chord.Root / 2, // LOWEST Bb2
+                                        chord.Third / 2, chord.Fifth / 2, chord.Top / 2, chord.Root    ,
+                                        chord.Third    , chord.Fifth    , chord.Top    , chord.Root * 2}; // HIGHEST A5
+                break;
         }
 
         //print("this");
         return voicing;
     }
 }
+
+
+
+// OLD SWITCH STATEMENT IN CASE I NEEED IT LATER
+//switch (chord.Seventh)
+//{
+//    case Chord.SeventhType.None:
+//        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
+//                                chord.Third, chord.Fifth, chord.Root * 2, chord.Third * 2,
+//                                chord.Fifth * 2, chord.Root * 4, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
+//        break;
+
+//    case Chord.SeventhType.Major:
+//        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
+//                                chord.Third, chord.Fifth, chord.Top, chord.Third * 2,
+//                                chord.Fifth * 2, chord.Top * 2, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
+//        break;
+
+//    case Chord.SeventhType.Minor:
+//        voicing = new float[] { chord.Root / 4, chord.Root / 2, chord.Fifth / 2, chord.Root,
+//                                chord.Third, chord.Fifth, chord.Top, chord.Third * 2,
+//                                chord.Fifth * 2, chord.Top * 2, chord.Third * 4, chord.Fifth * 4}; // F-G6 MAX
+//        break;
+
+//    case Chord.SeventhType.Diminished:
+//        voicing = new float[] { chord.Root / 8, chord.Root / 4,  chord.Fifth / 4, chord.Third / 2,
+//                                chord.Root,     chord.Fifth,     chord.Third * 2, chord.Fifth * 2,
+//                                chord.Root * 4, chord.Third * 4, chord.Fifth * 4, chord.Root * 8};
+//        break;
+
+//} break;
