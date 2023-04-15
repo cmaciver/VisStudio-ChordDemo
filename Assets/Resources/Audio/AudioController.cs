@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class AudioController
 {
 #pragma warning disable
-    private readonly struct Pitch {
+    private readonly struct Pitch
+    {
         public Pitch(float m3, float M3, float d5, float p5, float a5, float d7, float h7, float m7, float M7)
         {
             semitone = 1.05946309436f;
@@ -48,7 +49,8 @@ public class AudioController
     private AudioClip[] clips;
     private int clip = 0;
 
-    public AudioController(Tuning tuning) {
+    public AudioController(Tuning tuning)
+    {
         switch (tuning)
         {
             case Tuning.Equal:
@@ -65,12 +67,18 @@ public class AudioController
         clips = Resources.LoadAll<AudioClip>("Audio/Sounds");
     }
 
-    public Chord GetChord(Gamepad gamepad) {
+    public Chord GetChord(Gamepad gamepad)
+    {
         float rootPitch;
         float thirdMult;
         float fifthMult;
         float topMult;
-        
+
+        Note.Name rootName;
+        Note.Name thirdName;
+        Note.Name fifthName;
+        Note.Name topName;
+
         bool up = gamepad.dpad.up.isPressed; // G (5)
         bool right = gamepad.dpad.right.isPressed; // F (4)
         bool down = gamepad.dpad.down.isPressed; // C (1)
@@ -78,15 +86,28 @@ public class AudioController
 
         string rootPos;
 
-        if (up || right || down || left) {
+        if (up || right || down || left)
+        {
             if (down) // C
+            {
                 rootPitch = 1f;
+                rootName = Note.Name.C;
+            }
             else if (right) // F
+            {
                 rootPitch = 1.33483985417f;
+                rootName = Note.Name.F;
+            }
             else if (left) // D
+            {
                 rootPitch = 1.12246204831f;
+                rootName = Note.Name.D;
+            }
             else // G
+            {
                 rootPitch = 1.49830707688f;
+                rootName = Note.Name.G;
+            }
 
             bool rsDead = gamepad.rightStick.ReadValue().magnitude < 0.4f;
             bool rsVert = Mathf.Abs(gamepad.rightStick.y.ReadValue()) >= Mathf.Abs(gamepad.rightStick.x.ReadValue());
@@ -96,13 +117,41 @@ public class AudioController
             bool rsLeft = !rsDead && gamepad.rightStick.x.ReadValue() < -0.0f && !rsVert;
 
             if (rsUp)
+            {
                 rootPitch *= pitch.wholetone;
+                rootName = Note.Up(rootName, 2);
+            }
             else if (rsDown)
+            {
                 rootPitch /= pitch.wholetone;
+                rootName = Note.Down(rootName, 2);
+            }
             else if (rsRight)
+            {
                 rootPitch *= pitch.semitone;
+                rootName = Note.Up(rootName);
+            }
             else if (rsLeft)
+            {
                 rootPitch /= pitch.semitone;
+                rootName = Note.Down(rootName);
+            }
+
+            //bool lsDead = gamepad.leftStick.ReadValue().magnitude < 0.4f;
+            //bool lsVert = Mathf.Abs(gamepad.leftStick.y.ReadValue()) >= Mathf.Abs(gamepad.leftStick.x.ReadValue());
+            //bool lsUp = !lsDead && gamepad.leftStick.y.ReadValue() > 0.0f && lsVert;
+            //bool lsDown = !lsDead && gamepad.leftStick.y.ReadValue() < -0.0f && lsVert;
+            //bool lsRight = !lsDead && gamepad.leftStick.x.ReadValue() > 0.0f && !lsVert;
+            //bool lsLeft = !lsDead && gamepad.leftStick.x.ReadValue() < -0.0f && !lsVert;
+
+            //if (lsUp)
+            //    rootPitch *= pitch.p8 * pitch.p8;
+            //else if (lsDown)
+            //    rootPitch /= pitch.p8 * pitch.p8;
+            //else if (lsRight)
+            //    rootPitch *= pitch.p8;
+            //else if (lsLeft)
+            //    rootPitch /= pitch.p8;
 
             Chord.RootLocation rootLoc;
             if (rootPitch < 1.02930223664f)
@@ -119,8 +168,36 @@ public class AudioController
             bool south = gamepad.buttonSouth.isPressed;
             bool west = gamepad.buttonWest.isPressed;
 
-            thirdMult = south ? pitch.m3 : pitch.M3;
-            fifthMult = west ? (south ? pitch.d5 : pitch.a5) : pitch.p5;
+            if (south)
+            {
+                thirdMult = pitch.m3;
+                thirdName = Note.Up(rootName, 3);
+            }
+            else
+            {
+                thirdMult = pitch.M3;
+                thirdName = Note.Up(rootName, 4);
+            }
+
+            if (west)
+            {
+                if (south)
+                {
+                    fifthMult = pitch.d5;
+                    fifthName = Note.Up(rootName, 6);
+                }
+                else
+                {
+                    fifthMult = pitch.a5;
+                    fifthName = Note.Up(rootName, 8);
+                }
+            }
+            else
+            {
+                fifthMult = pitch.p5;
+                fifthName = Note.Up(rootName, 7);
+            }
+
             Chord.SeventhType seventh;
             if (north)
             {
@@ -128,11 +205,13 @@ public class AudioController
                 {
                     topMult = pitch.d7;
                     seventh = Chord.SeventhType.Diminished;
+                    topName = Note.Down(rootName, 3);
                 }
                 else
                 {
                     topMult = pitch.M7;
                     seventh = Chord.SeventhType.Major;
+                    topName = Note.Down(rootName, 1);
                 }
             }
             else
@@ -143,13 +222,15 @@ public class AudioController
                         topMult = pitch.m7;
                     else
                         topMult = pitch.h7;
-                    
+
                     seventh = Chord.SeventhType.Minor;
+                    topName = Note.Down(rootName, 2);
                 }
                 else
                 {
                     topMult = pitch.p8;
                     seventh = Chord.SeventhType.None;
+                    topName = rootName;
                 }
             }
 
@@ -158,6 +239,10 @@ public class AudioController
                 rootPitch * thirdMult,
                 rootPitch * fifthMult,
                 rootPitch * topMult,
+                rootName,
+                thirdName,
+                fifthName,
+                topName,
                 rootLoc,
                 seventh
             );
@@ -199,12 +284,17 @@ public class Chord
     public enum RootLocation { BbC, DbEb, EGb, GA }
     public enum SeventhType { Diminished, Minor, Major, None }
 
-    public Chord(float root, float third, float fifth, float top, RootLocation rootLoc, SeventhType seventh)
+    public Chord(float root, float third, float fifth, float top,
+        Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName, RootLocation rootLoc, SeventhType seventh)
     {
         Root = root;
         Third = third;
         Fifth = fifth;
         Top = top;
+        RootName = rootName;
+        ThirdName = thirdName;
+        FifthName = fifthName;
+        TopName = topName;
         RootLoc = rootLoc;
         Seventh = seventh;
     }
@@ -213,6 +303,51 @@ public class Chord
     public float Third { get; }
     public float Fifth { get; }
     public float Top { get; }
+    public Note.Name RootName { get; }
+    public Note.Name ThirdName { get; }
+    public Note.Name FifthName { get; }
+    public Note.Name TopName { get; }
     public RootLocation RootLoc { get; }
     public SeventhType Seventh { get; }
+}
+
+public class Note
+{
+    public enum Name { Bb, B, C, Db, D, Eb, E, F, Gb, G, Ab, A }
+
+    public static Name Up(Name n, int steps = 1)
+    {
+        if (steps < 0)
+            return Down(n, -steps);
+
+        Name ret = n;
+
+        for (int i = steps; i > 0; i--)
+        {
+            if (ret == Name.A)
+                ret = Name.Bb;
+            else
+                ret++;
+        }
+
+        return ret;
+    }
+
+    public static Name Down(Name n, int steps = 1)
+    {
+        if (steps < 0)
+            return Up(n, -steps);
+
+        Name ret = n;
+
+        for (int i = steps; i > 0; i--)
+        {
+            if (ret == Name.Bb)
+                ret = Name.A;
+            else
+                ret--;
+        }
+
+        return ret;
+    }
 }
