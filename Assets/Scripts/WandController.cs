@@ -15,6 +15,8 @@ public class WandController : MonoBehaviour
 
     float[] pitchMult = null;
 
+    Note.Name[] pitchNames = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,8 +48,10 @@ public class WandController : MonoBehaviour
             {
                 float[] pitchMult = GetVoicing(chord);
 
+                Note.Name[] pitchNames = GetVoicingNames(chord);
+
                 foreach (GameObject wall in walls)
-                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult);
+                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames);
                 
                 bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
             }
@@ -67,10 +71,12 @@ public class WandController : MonoBehaviour
             if (chord == null)
             {
                 pitchMult = null;
+                pitchNames = null;
             }
             else
             {
                 pitchMult = GetVoicing(chord);
+                pitchNames = GetVoicingNames(chord);
                 if (!gamepad.rightTrigger.isPressed) // RT NOT Held
                 {
                     bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
@@ -87,7 +93,7 @@ public class WandController : MonoBehaviour
             }
             else
             {
-                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult);
+                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames);
             }
         }
 
@@ -154,6 +160,43 @@ public class WandController : MonoBehaviour
                 voicing = new float[] { chord.Third / 4, chord.Fifth / 4, chord.Top / 4, chord.Root / 2, // LOWEST Bb2
                                         chord.Third / 2, chord.Fifth / 2, chord.Top / 2, chord.Root    ,
                                         chord.Third    , chord.Fifth    , chord.Top    , chord.Root * 2}; // HIGHEST A5
+                break;
+        }
+
+        //print("this");
+        return voicing;
+    }
+
+    private Note.Name[] GetVoicingNames(Chord chord)
+    {
+        Note.Name[] voicing = new Note.Name[] { chord.RootName, chord.RootName,  chord.FifthName, chord.ThirdName,
+                                        chord.FifthName,    chord.RootName,  chord.ThirdName, chord.FifthName,
+                                        chord.TopName,  chord.ThirdName, chord.FifthName, chord.TopName};
+
+        switch (chord.RootLoc)
+        {
+            case Chord.RootLocation.BbC:
+                voicing = new Note.Name[] { chord.RootName, chord.ThirdName,  chord.FifthName, chord.TopName, // LOWEST Bb2
+                                        chord.RootName   , chord.ThirdName   ,  chord.FifthName    , chord.TopName    ,
+                                        chord.RootName, chord.ThirdName,  chord.FifthName, chord.TopName};  // HIGHEST C6
+                break;
+
+            case Chord.RootLocation.DbEb:
+                voicing = new Note.Name[] { chord.TopName, chord.RootName, chord.ThirdName,  chord.FifthName, // LOWEST Bb2
+                                        chord.TopName, chord.RootName   , chord.ThirdName   ,  chord.FifthName    ,
+                                        chord.TopName    , chord.RootName, chord.ThirdName,  chord.FifthName}; // HIGHEST Bb5
+                break;
+
+            case Chord.RootLocation.EGb:
+                voicing = new Note.Name[] { chord.FifthName, chord.TopName, chord.RootName, chord.ThirdName, // LOWEST B2
+                                        chord.FifthName, chord.TopName, chord.RootName   , chord.ThirdName   ,
+                                        chord.FifthName    , chord.TopName    , chord.RootName, chord.ThirdName}; // HIGHEST Bb5
+                break;
+                
+            case Chord.RootLocation.GA:
+                voicing = new Note.Name[] { chord.ThirdName, chord.FifthName, chord.TopName, chord.RootName, // LOWEST Bb2
+                                        chord.ThirdName, chord.FifthName, chord.TopName, chord.RootName   ,
+                                        chord.ThirdName   , chord.FifthName    , chord.TopName    , chord.RootName}; // HIGHEST A5
                 break;
         }
 

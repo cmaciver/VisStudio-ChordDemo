@@ -22,6 +22,10 @@ public class WallScript : MonoBehaviour
 
     private bool primed = true;
 
+    Color destinationColor;
+
+    Renderer renderer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,18 +36,35 @@ public class WallScript : MonoBehaviour
             source.clip = soundfont;
             source.Play();
         }
+
+        renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        renderer.material.color = Color.Lerp(renderer.material.color, destinationColor, 0.02f);
     }
 
-    public void PlayPrimed(float[] pitchMult)
+    public void PlayPrimed(float[] pitchMult, Note.Name[] pitchNames)
     {
         if (primed)
+        {
             PlayAudio(pitchMult);
+            destinationColor = ColorPicker.GetColor(pitchNames[wallNumber]);
+
+            //if (pitchMult[wallNumber] < 1)
+            //{
+            //    destinationColor.r /= 2;
+            //    destinationColor.g /= 2;
+            //    destinationColor.b /= 2;
+            //} else if (pitchMult[wallNumber] < 2)
+            //{
+            //    destinationColor.r /= 1.5f;
+            //    destinationColor.g /= 1.5f;
+            //    destinationColor.b /= 1.5f;
+            //}
+        }
 
         primed = false;
     }
@@ -68,7 +89,6 @@ public class WallScript : MonoBehaviour
         currentSource = currentIsFirst ? sources[1] : sources[0];
         currentIsFirst = !currentIsFirst;
 
-
         currentSource.pitch = pitchMult[wallNumber];
         StartCoroutine(FadeAudioSource.StartFade(currentSource, 0.5f, volume[wallNumber]));
     }
@@ -80,6 +100,7 @@ public class WallScript : MonoBehaviour
 
     public void StopAudio()
     {
+        destinationColor = Color.black;
         StopAllCoroutines();
         StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));
         currentSource = currentIsFirst ? sources[1] : sources[0];
