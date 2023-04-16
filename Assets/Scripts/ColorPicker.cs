@@ -9,7 +9,7 @@ public class ColorPicker
      * @param note the note name to be converted into a color
      * @return a color corresponding to the note name input
      */
-    public Color GetColor(Note.Name note)
+    public static Color GetColor(Note.Name note)
     {
         Color bgColor = Color.red;
 
@@ -50,6 +50,9 @@ public class ColorPicker
                 break;
             case Note.Name.B:
                 bgColor = new Color(245, 66, 156);
+                break;
+            default:
+                bgColor = new Color(0, 0, 0);
                 break;
         }
 
