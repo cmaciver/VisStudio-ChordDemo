@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.172768, g: 0.21589169, b: 0.29782546, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -369,7 +369,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -1660,7 +1660,7 @@ PrefabInstance:
     - target: {fileID: 4168687213760081940, guid: 3f67d029d77a5d04fbbb6848d2489549,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.22
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4168687213760081940, guid: 3f67d029d77a5d04fbbb6848d2489549,
         type: 3}
@@ -1711,7 +1711,7 @@ PrefabInstance:
         type: 3}
       propertyPath: soundfont
       value: 
-      objectReference: {fileID: 8300000, guid: ad139112ae70d794ab38e338cd97da0b, type: 3}
+      objectReference: {fileID: 8300000, guid: 5490297e9addbb6418840b963f90da0c, type: 3}
     - target: {fileID: 8002335323349849212, guid: 3f67d029d77a5d04fbbb6848d2489549,
         type: 3}
       propertyPath: highSource
