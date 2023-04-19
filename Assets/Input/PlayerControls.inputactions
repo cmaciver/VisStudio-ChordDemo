@@ -40,7 +40,7 @@
                     "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "Recenter",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -51,7 +51,7 @@
                     "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "ChangeScheme",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -73,7 +73,7 @@
                     "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -84,7 +84,7 @@
                     "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -95,7 +95,7 @@
                     "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -106,7 +106,7 @@
                     "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Any",
                     "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -116,11 +116,11 @@
     ],
     "controlSchemes": [
         {
-            "name": "PS4",
-            "bindingGroup": "PS4",
+            "name": "Any",
+            "bindingGroup": "Any",
             "devices": [
                 {
-                    "devicePath": "<DualShockGamepad>",
+                    "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
                 }
