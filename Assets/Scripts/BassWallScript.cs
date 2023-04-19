@@ -11,6 +11,9 @@ public class BassWallScript : MonoBehaviour {
     private AudioSource lowSource;
 
     [SerializeField]
+    private AudioSource midSource;
+
+    [SerializeField]
     private AudioSource highSource;
 
     //private float volume = 0.8f; // Negotiate this a little bit
@@ -20,6 +23,9 @@ public class BassWallScript : MonoBehaviour {
     {
         lowSource.clip = soundfont;
         lowSource.Play();
+
+        midSource.clip = soundfont;
+        midSource.Play();
 
         highSource.clip = soundfont;
         highSource.Play();
@@ -31,22 +37,25 @@ public class BassWallScript : MonoBehaviour {
         
     }
 
-    public void PlayAudio(Chord chord) // FIX THIS STILL
+    public void PlayAudio(Chord chord)
     {
         float root = chord.Root;
-        float distance = (float)chord.RootName / 12;
+        float distance = ((float)chord.RootName + 0.5f) / 12;
 
         lowSource.pitch = root / 8;
-        highSource.pitch = root / 4;
+        midSource.pitch = root / 4;
+        highSource.pitch = root / 2;
 
-        lowSource.volume = Mathf.Lerp( 0f, 1f, distance);
-        highSource.volume = Mathf.Lerp(1f, 0f, distance);
+        lowSource.volume = Mathf.Lerp( 0f, 2f / 3f, distance);
+        midSource.volume = Mathf.Lerp(2f / 3f, 1f, 1f - 2f * Mathf.Abs(0.5f - distance));
+        highSource.volume = Mathf.Lerp(2f / 3f, 0f, distance);
     }
 
 
     public void StopAudio()
     {
         lowSource.volume = 0f;
+        midSource.volume = 0f;
         highSource.volume = 0f;
     }
 
