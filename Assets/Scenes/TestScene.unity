@@ -1711,7 +1711,7 @@ PrefabInstance:
         type: 3}
       propertyPath: soundfont
       value: 
-      objectReference: {fileID: 8300000, guid: 5490297e9addbb6418840b963f90da0c, type: 3}
+      objectReference: {fileID: 8300000, guid: ad139112ae70d794ab38e338cd97da0b, type: 3}
     - target: {fileID: 8002335323349849212, guid: 3f67d029d77a5d04fbbb6848d2489549,
         type: 3}
       propertyPath: highSource

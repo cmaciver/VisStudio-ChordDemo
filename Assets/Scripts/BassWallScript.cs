@@ -34,10 +34,10 @@ public class BassWallScript : MonoBehaviour {
     public void PlayAudio(Chord chord) // FIX THIS STILL
     {
         float root = chord.Root;
-        float distance = ((((float)chord.RootName + 7) % 12)/ 12);
+        float distance = ((float)chord.RootName + .5f) / 12;
 
-        lowSource.pitch = root / 4; //F1
-        highSource.pitch = root / 2; // F2
+        lowSource.pitch = root / 8;
+        highSource.pitch = root / 4;
 
         lowSource.volume = Mathf.Lerp( 0f, 1f, distance); 
         highSource.volume = Mathf.Lerp(1f, 0f, distance);
