@@ -13,6 +13,8 @@ public class BassWallScript : MonoBehaviour {
     [SerializeField]
     private AudioSource highSource;
 
+    private GameObject[] bassLights;
+
     //private float volume = 0.8f; // Negotiate this a little bit
 
     // Start is called before the first frame update
@@ -23,6 +25,8 @@ public class BassWallScript : MonoBehaviour {
 
         highSource.clip = soundfont;
         highSource.Play();
+
+        bassLights = GameObject.FindGameObjectsWithTag("BassLight");
     }
 
     // Update is called once per frame
@@ -41,6 +45,12 @@ public class BassWallScript : MonoBehaviour {
 
         lowSource.volume = Mathf.Lerp( 0f, 1f, distance); 
         highSource.volume = Mathf.Lerp(1f, 0f, distance);
+
+        foreach (GameObject light in bassLights)
+        {
+            light.GetComponent<BassLights>().ChangeColor(ColorPicker.GetColor(chord.RootName));
+            //Debug.Log("Updating Bass Light");
+        }
     }
 
 
@@ -48,6 +58,12 @@ public class BassWallScript : MonoBehaviour {
     {
         lowSource.volume = 0f;
         highSource.volume = 0f;
+
+        foreach (GameObject light in bassLights)
+        {
+            light.GetComponent<BassLights>().ChangeColor(Color.black);
+            //Debug.Log("Updating Bass Light");
+        }
     }
 
 }

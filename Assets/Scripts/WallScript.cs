@@ -24,7 +24,7 @@ public class WallScript : MonoBehaviour
 
     Color destinationColor;
 
-    Renderer renderer;
+    private Material mat;
 
     // Start is called before the first frame update
     void Start()
@@ -37,13 +37,13 @@ public class WallScript : MonoBehaviour
             source.Play();
         }
 
-        renderer = GetComponent<Renderer>();
+        mat = GetComponent<Renderer>().material;
     }
 
     // Update is called once per frame
     void Update()
     {
-        renderer.material.color = Color.Lerp(renderer.material.color, destinationColor, 0.02f);
+        mat.color = Color.Lerp(mat.color, destinationColor, 0.05f);
     }
 
     public void PlayPrimed(float[] pitchMult, Note.Name[] pitchNames)
@@ -52,18 +52,6 @@ public class WallScript : MonoBehaviour
         {
             PlayAudio(pitchMult);
             destinationColor = ColorPicker.GetColor(pitchNames[wallNumber]);
-
-            //if (pitchMult[wallNumber] < 1)
-            //{
-            //    destinationColor.r /= 2;
-            //    destinationColor.g /= 2;
-            //    destinationColor.b /= 2;
-            //} else if (pitchMult[wallNumber] < 2)
-            //{
-            //    destinationColor.r /= 1.5f;
-            //    destinationColor.g /= 1.5f;
-            //    destinationColor.b /= 1.5f;
-            //}
         }
 
         primed = false;

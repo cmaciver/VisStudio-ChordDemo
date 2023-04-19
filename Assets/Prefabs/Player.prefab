@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInput: {fileID: 7327684504031136789}
   maxAngle: 350
-  minAngle: 10
+  minAngle: 5
 --- !u!1 &4235800321324885004
 GameObject:
   m_ObjectHideFlags: 0

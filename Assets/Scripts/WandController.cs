@@ -52,8 +52,11 @@ public class WandController : MonoBehaviour
 
                 foreach (GameObject wall in walls)
                     wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames);
-                
-                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+
+                if (!gamepad.rightTrigger.isPressed) // RT NOT Held
+                {
+                    bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+                }
             }
         }
 
