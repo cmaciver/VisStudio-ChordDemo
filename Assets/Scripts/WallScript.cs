@@ -18,7 +18,7 @@ public class WallScript : MonoBehaviour
 
     private bool currentIsFirst = true;
 
-    private float[] volume = {0.775f, 0.75f, 0.725f, 0.7f, 0.675f, 0.65f, 0.625f, 0.6f, 0.575f, 0.55f, 0.525f, 0.5f };
+    private float[] volume = {1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
 
     private bool primed = true;
 
