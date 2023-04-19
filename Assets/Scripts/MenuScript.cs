@@ -6,14 +6,16 @@ using UnityEngine.InputSystem;
 public class MenuScript : MonoBehaviour
 {
     [SerializeField]
-    Canvas canvas;
+    GameObject canvas;
 
     private bool isActive;
+
+    private enum whichOption { tuning, soundfont }
 
     // Start is called before the first frame update
     void Start()
     {
-        isActive = gameObject.activeSelf;
+        isActive = true;
     }
 
     // Update is called once per frame
@@ -22,7 +24,22 @@ public class MenuScript : MonoBehaviour
         if (Gamepad.all[0].selectButton.wasPressedThisFrame)
         {
             isActive = !isActive;
-            gameObject.GetComponent<Renderer>().enabled = isActive;
+            canvas.SetActive(isActive);
+        }
+
+        if (Gamepad.all[0].dpad.down.wasPressedThisFrame)
+        {
+
+        }
+
+        if (Gamepad.all[0].dpad.up.wasPressedThisFrame)
+        {
+
+        }
+
+        if (Gamepad.all[0].buttonSouth.wasPressedThisFrame)
+        {
+
         }
     }
 
