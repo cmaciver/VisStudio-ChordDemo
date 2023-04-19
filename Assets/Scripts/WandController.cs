@@ -17,6 +17,8 @@ public class WandController : MonoBehaviour
 
     Note.Name[] pitchNames = null;
 
+    private ParticleSystem.MainModule sparkles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +27,8 @@ public class WandController : MonoBehaviour
         walls = GameObject.FindGameObjectsWithTag("SoundWall");
 
         bassWall = GameObject.FindGameObjectWithTag("BassWall");
+
+        sparkles = GameObject.FindGameObjectWithTag("sparkles").GetComponent<ParticleSystem>().main;
     }
 
     // Update is called once per frame
@@ -37,12 +41,18 @@ public class WandController : MonoBehaviour
         {
             Chord chord = ac.GetChord(gamepad);
 
+            //if (sparkles.k)
+
+            sparkles.startColor = ColorPicker.GetColor(chord?.RootName);
+
             if (chord == null)
             {
                 foreach (GameObject wall in walls)
                     wall.GetComponent<WallScript>().StopPrimed();
 
                 bassWall.GetComponent<BassWallScript>().StopAudio();
+
+                sparkles.startColor = Color.black;
             }
             else
             {
@@ -114,7 +124,10 @@ public class WandController : MonoBehaviour
             if (chord == null)
             {
                 bassWall.GetComponent<BassWallScript>().StopAudio();
-            } else
+
+                sparkles.startColor = Color.black;
+            }
+            else
             {
                 bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
             }
