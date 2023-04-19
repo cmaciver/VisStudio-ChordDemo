@@ -92,12 +92,12 @@ PrefabInstance:
     - target: {fileID: 4235800321324885004, guid: 673e3957cf2ad7c4da7f4849e9fce6cd,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7327684504031136789, guid: 673e3957cf2ad7c4da7f4849e9fce6cd,
         type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7327684504031136789, guid: 673e3957cf2ad7c4da7f4849e9fce6cd,
         type: 3}

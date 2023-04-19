@@ -64,7 +64,7 @@ sealed class GyroController : MonoBehaviour
     void Start()
     {
         playerNum = playerInput.playerIndex;
-        if (playerInput.currentControlScheme == "PS4")
+        if (playerInput.currentControlScheme == "Any")
         {
             // DS4 input layout extension
             InputSystem.RegisterLayoutOverride(LayoutJson);
@@ -124,7 +124,6 @@ sealed class GyroController : MonoBehaviour
                 transform.localRotation = Quaternion.Euler(minAngle, transform.localRotation.eulerAngles.y, 0);
             }
         }
-
     }
 
     #endregion

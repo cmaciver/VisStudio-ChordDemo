@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5801821005100820476
 Transform:
   m_ObjectHideFlags: 0
@@ -4958,7 +4958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 7327684504031136789}
-  maxAngle: 350
+  maxAngle: 345
   minAngle: 5
 --- !u!1 &4235800321324885004
 GameObject:
@@ -5037,9 +5037,9 @@ MonoBehaviour:
     m_ActionName: Weapons/Recenter[/DualShock4GamepadHID/start]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 6dc1239cec62e67409d053a7a08f6b88, type: 3}
+      - m_Target: {fileID: 4996687543584445143}
         m_TargetAssemblyTypeName: GyroController, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: ChangeScheme
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
