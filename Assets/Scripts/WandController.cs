@@ -13,6 +13,8 @@ public class WandController : MonoBehaviour
 
     private GameObject activeWall = null;
 
+    Chord chord;
+
     float[] pitchMult = null;
 
     Note.Name[] pitchNames = null;
@@ -39,7 +41,7 @@ public class WandController : MonoBehaviour
         // LS Press
         if (gamepad.leftShoulder.wasPressedThisFrame)
         {
-            Chord chord = ac.GetChord(gamepad);
+            chord = ac.GetChord(gamepad);
 
             //if (sparkles.k)
 
@@ -61,7 +63,7 @@ public class WandController : MonoBehaviour
                 Note.Name[] pitchNames = GetVoicingNames(chord);
 
                 foreach (GameObject wall in walls)
-                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames);
+                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
 
                 if (!gamepad.rightTrigger.isPressed) // RT NOT Held
                 {
@@ -80,7 +82,7 @@ public class WandController : MonoBehaviour
         // LT Press
         if (gamepad.leftTrigger.wasPressedThisFrame)
         {
-            Chord chord = ac.GetChord(gamepad);
+            chord = ac.GetChord(gamepad);
             if (chord == null)
             {
                 pitchMult = null;
@@ -106,7 +108,7 @@ public class WandController : MonoBehaviour
             }
             else
             {
-                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames);
+                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
             }
         }
 
@@ -120,7 +122,7 @@ public class WandController : MonoBehaviour
         // RS Press
         if (gamepad.rightShoulder.wasPressedThisFrame)
         {
-            Chord chord = ac.GetChord(gamepad);
+            chord = ac.GetChord(gamepad);
             if (chord == null)
             {
                 bassWall.GetComponent<BassWallScript>().StopAudio();

@@ -46,7 +46,7 @@ public class BassWallScript : MonoBehaviour {
         float root = chord.Root;
         float distance = ((float)chord.RootName + 0.5f) / 12;
 
-        lowSource.pitch = root / 8;
+        lowSource.pitch = root / 8; // This really should be 16 in the real room but idk yet
         midSource.pitch = root / 4;
         highSource.pitch = root / 2;
 

@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class WallScript : MonoBehaviour
 {
+    [SerializeField]
+    private bool testing;
+
     [SerializeField]
     private int wallNumber;
 
@@ -26,6 +30,7 @@ public class WallScript : MonoBehaviour
 
     private Material mat;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +43,13 @@ public class WallScript : MonoBehaviour
         }
 
         mat = GetComponent<Renderer>().material;
+
+        if (!testing)
+        {
+            GetComponentInChildren<TextMeshProUGUI>().alpha = 0;
+        }
+
+        // enharmonic calculator test here ?
     }
 
     // Update is called once per frame
@@ -46,15 +58,51 @@ public class WallScript : MonoBehaviour
         mat.color = Color.Lerp(mat.color, destinationColor, 0.05f);
     }
 
-    public void PlayPrimed(float[] pitchMult, Note.Name[] pitchNames)
+    public void PlayPrimed(float[] pitchMult, Note.Name[] pitchNames, Chord chord) // dont use the chord unless you have too
     {
         if (primed)
         {
             PlayAudio(pitchMult);
             destinationColor = ColorPicker.GetColor(pitchNames[wallNumber]);
+            GetComponentInChildren<TextMeshProUGUI>().text = getEnharmonic(pitchNames[wallNumber], chord) + getOctave();// NEW
         }
 
         primed = false;
+    }
+
+    private int getOctave()
+    {
+        return (int)Math.Floor(Math.Log(currentSource.pitch, 2)+0.0001) + 4; // float point moment
+    } 
+
+    private string getEnharmonic(Note.Name pitchName, Chord chord) // MAKE BETTER LATER (OR DONT)
+    {
+        String note = Enum.GetName(typeof(Note.Name),pitchName); // maybe casting to string is unneccesary, but it's easier for now
+        Note.Name root = chord.RootName;
+        switch (root)
+        {
+            case Note.Name.G:
+            case Note.Name.Gb:
+                if (chord.ThirdType == Chord.ThirdTypeE.Major) { // maybe we don't need all of this
+                    if (note.Equals("Db")) note = "C#";
+                    else if (note.Equals("Eb")) note = "D#";
+                    else if (note.Equals("Gb")) note = "F#";
+                    else if (note.Equals("Ab")) note = "G#";
+                    else if (note.Equals("Bb")) note = "A#";
+                }
+                break;
+            case Note.Name.D:
+            case Note.Name.A:
+            case Note.Name.E:
+            case Note.Name.B:
+                if (note.Equals("Db")) note = "C#";
+                else if (note.Equals("Eb")) note = "D#";
+                else if (note.Equals("Gb")) note = "F#";
+                else if (note.Equals("Ab")) note = "G#";
+                else if (note.Equals("Bb")) note = "A#";
+                break;
+        }
+        return note;
     }
 
     public void PlayAudio(float[] pitchMult)
@@ -88,7 +136,10 @@ public class WallScript : MonoBehaviour
 
     public void StopAudio()
     {
+        //update the things on the wall itself
         destinationColor = Color.black;
+        GetComponentInChildren<TextMeshProUGUI>().text = "";   // NEW
+
         StopAllCoroutines();
         StartCoroutine(FadeAudioSource.StartFade(currentSource, .25f, 0));
         currentSource = currentIsFirst ? sources[1] : sources[0];

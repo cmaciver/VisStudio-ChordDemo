@@ -168,15 +168,18 @@ public class AudioController
             bool south = gamepad.buttonSouth.isPressed;
             bool west = gamepad.buttonWest.isPressed;
 
+            Chord.ThirdTypeE thirdType;
             if (south)
             {
                 thirdMult = pitch.m3;
                 thirdName = Note.Up(rootName, 3);
+                thirdType = Chord.ThirdTypeE.Minor;
             }
             else
             {
                 thirdMult = pitch.M3;
                 thirdName = Note.Up(rootName, 4);
+                thirdType = Chord.ThirdTypeE.Major;
             }
 
             if (west)
@@ -198,19 +201,19 @@ public class AudioController
                 fifthName = Note.Up(rootName, 7);
             }
 
-            Chord.SeventhType seventh;
+            Chord.SeventhTypeE seventhType;
             if (north)
             {
                 if (east)
                 {
                     topMult = pitch.d7;
-                    seventh = Chord.SeventhType.Diminished;
+                    seventhType = Chord.SeventhTypeE.Diminished;
                     topName = Note.Down(rootName, 3);
                 }
                 else
                 {
                     topMult = pitch.M7;
-                    seventh = Chord.SeventhType.Major;
+                    seventhType = Chord.SeventhTypeE.Major;
                     topName = Note.Down(rootName, 1);
                 }
             }
@@ -223,13 +226,13 @@ public class AudioController
                     else
                         topMult = pitch.h7;
 
-                    seventh = Chord.SeventhType.Minor;
+                    seventhType = Chord.SeventhTypeE.Minor;
                     topName = Note.Down(rootName, 2);
                 }
                 else
                 {
                     topMult = pitch.p8;
-                    seventh = Chord.SeventhType.None;
+                    seventhType = Chord.SeventhTypeE.None;
                     topName = rootName;
                 }
             }
@@ -244,7 +247,8 @@ public class AudioController
                 fifthName,
                 topName,
                 rootLoc,
-                seventh
+                thirdType,
+                seventhType
             );
 
             return chord;
@@ -282,10 +286,11 @@ public class AudioController
 public class Chord
 {
     public enum RootLocation { BbC, DbEb, EGb, GA }
-    public enum SeventhType { Diminished, Minor, Major, None }
+    public enum ThirdTypeE { Major, Minor }
+    public enum SeventhTypeE { Diminished, Minor, Major, None }
 
     public Chord(float root, float third, float fifth, float top,
-        Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName, RootLocation rootLoc, SeventhType seventh)
+        Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName, RootLocation rootLoc, ThirdTypeE thirdType, SeventhTypeE seventhType)
     {
         Root = root;
         Third = third;
@@ -296,7 +301,8 @@ public class Chord
         FifthName = fifthName;
         TopName = topName;
         RootLoc = rootLoc;
-        Seventh = seventh;
+        ThirdType = thirdType;
+        SeventhType = seventhType;
     }
 
     public float Root { get; }
@@ -308,7 +314,8 @@ public class Chord
     public Note.Name FifthName { get; }
     public Note.Name TopName { get; }
     public RootLocation RootLoc { get; }
-    public SeventhType Seventh { get; }
+    public ThirdTypeE ThirdType { get; }
+    public SeventhTypeE SeventhType { get; }
 }
 
 public class Note
