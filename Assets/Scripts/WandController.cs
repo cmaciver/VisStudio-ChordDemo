@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class WandController : MonoBehaviour
 {
+    [SerializeField] private PlayerInput playerInput;
+
     private GameObject[] walls;
 
     private GameObject bassWall;
@@ -21,23 +26,89 @@ public class WandController : MonoBehaviour
 
     private ParticleSystem.MainModule sparkles;
 
+    private AudioController.Layout layout = AudioController.Layout.Scale;
+
+    private static class ButtonsHeld
+    {
+        public enum Button { d_down, d_left, d_right, d_up, f_down, f_left, f_right, f_up, l_trigger }
+
+        private static readonly float[] DEFAULT = Enumerable.Repeat(-1f, Enum.GetValues(typeof(Button)).Length).ToArray();
+        public static float[] timers = DEFAULT;
+
+        private static readonly float HELD_TIME = 0.25f;
+
+        public static void Reset()
+        {
+            timers = DEFAULT;
+        }
+
+        public static bool Update()
+        {
+            bool held = false;
+
+            for (int i = 0; i < timers.Length; i++)
+            {
+                if (timers[i] >= HELD_TIME)
+                    held = true;
+                else if (timers[i] >= 0)
+                    timers[i] += Time.deltaTime;
+            }
+
+            return held;
+        }
+
+        public static void Press(Button button)
+        {
+            timers[(int)button] = 0;
+        }
+
+        public static void Release(Button button)
+        {
+            timers[(int)button] = -1;
+        }
+
+        public static bool Held(Button button)
+        {
+            return timers[(int)button] >= HELD_TIME;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        ac = new(AudioController.Tuning.Equal);
+        ac = new(AudioController.Tuning.Equal, layout);
 
         walls = GameObject.FindGameObjectsWithTag("SoundWall");
 
         bassWall = GameObject.FindGameObjectWithTag("BassWall");
 
         sparkles = GameObject.FindGameObjectWithTag("sparkles").GetComponent<ParticleSystem>().main;
+
+        playerInput.deviceLostEvent.AddListener(Disconnect);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Gamepad gamepad = Gamepad.all[0];
+        Gamepad gamepad = Gamepad.all[playerInput.playerIndex];
+        switch (layout)
+        {
+            case AudioController.Layout.Advanced:
+                AdvancedLayout(gamepad);
+                break;
 
+            case AudioController.Layout.Melodic:
+                MelodicLayout(gamepad);
+                break;
+
+            case AudioController.Layout.Scale:
+                ScaleLayout(gamepad);
+                break;
+        }
+    }
+
+    private void AdvancedLayout(Gamepad gamepad)
+    {
         // LS Press
         if (gamepad.leftShoulder.wasPressedThisFrame)
         {
@@ -136,6 +207,154 @@ public class WandController : MonoBehaviour
         }
     }
 
+    private void MelodicLayout(Gamepad gamepad)
+    {
+        // LS Press
+        if (gamepad.leftShoulder.wasPressedThisFrame)
+        {
+            chord = ac.GetChord(gamepad);
+
+            //if (sparkles.k)
+
+            sparkles.startColor = ColorPicker.GetColor(chord?.RootName);
+
+            if (chord == null)
+            {
+                foreach (GameObject wall in walls)
+                    wall.GetComponent<WallScript>().StopPrimed();
+
+                bassWall.GetComponent<BassWallScript>().StopAudio();
+
+                sparkles.startColor = Color.black;
+            }
+            else
+            {
+                float[] pitchMult = GetVoicing(chord);
+
+                Note.Name[] pitchNames = GetVoicingNames(chord);
+
+                foreach (GameObject wall in walls)
+                    wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
+
+                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+            }
+        }
+
+        // LS Release
+        if (gamepad.leftShoulder.wasReleasedThisFrame && !gamepad.leftTrigger.isPressed) // COME BACK TO ME
+        {
+            foreach (GameObject wall in walls)
+                wall.GetComponent<WallScript>().Reprime();
+        }
+
+        // LT Press
+        if (gamepad.leftTrigger.wasPressedThisFrame)
+        {
+            chord = ac.GetChord(gamepad);
+            if (chord == null)
+            {
+                pitchMult = null;
+                pitchNames = null;
+            }
+            else
+            {
+                pitchMult = GetVoicing(chord);
+                pitchNames = GetVoicingNames(chord);
+
+                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+            }
+        }
+
+        // LT Held
+        if (gamepad.leftTrigger.isPressed && activeWall != null)
+        {
+            if (pitchMult == null)
+            {
+                activeWall.GetComponent<WallScript>().StopPrimed();
+            }
+            else
+            {
+                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
+            }
+        }
+
+        // LT Release
+        if (gamepad.leftTrigger.wasReleasedThisFrame && !gamepad.leftShoulder.isPressed)
+        {
+            foreach (GameObject wall in walls)
+                wall.GetComponent<WallScript>().Reprime();
+        }
+    }
+
+    private void ScaleLayout(Gamepad gamepad)
+    {
+        if (ButtonsHeld.Update() && activeWall != null)
+        {
+            if (pitchMult == null)
+            {
+                activeWall.GetComponent<WallScript>().StopPrimed();
+            }
+            else
+            {
+                activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
+            }
+        }
+
+        ScaleLayoutCheck(gamepad, gamepad.dpad.down, ButtonsHeld.Button.d_down);
+        ScaleLayoutCheck(gamepad, gamepad.dpad.left, ButtonsHeld.Button.d_left);
+        ScaleLayoutCheck(gamepad, gamepad.dpad.right, ButtonsHeld.Button.d_right);
+        ScaleLayoutCheck(gamepad, gamepad.dpad.up, ButtonsHeld.Button.d_up);
+
+        ScaleLayoutCheck(gamepad, gamepad.buttonSouth, ButtonsHeld.Button.f_down);
+        ScaleLayoutCheck(gamepad, gamepad.buttonWest, ButtonsHeld.Button.f_left);
+        ScaleLayoutCheck(gamepad, gamepad.buttonEast, ButtonsHeld.Button.f_right);
+        ScaleLayoutCheck(gamepad, gamepad.buttonNorth, ButtonsHeld.Button.f_up);
+
+        ScaleLayoutCheck(gamepad, gamepad.leftTrigger, ButtonsHeld.Button.l_trigger);
+    }
+
+    private void ScaleLayoutCheck(Gamepad gamepad, UnityEngine.InputSystem.Controls.ButtonControl buttonControl, ButtonsHeld.Button button)
+    {
+        if (buttonControl.wasPressedThisFrame)
+        {
+            chord = ac.GetChord(gamepad);
+            if (chord != null)
+            {
+                pitchMult = GetVoicing(chord);
+                pitchNames = GetVoicingNames(chord);
+            }
+            ButtonsHeld.Press(button);
+        }
+        if (buttonControl.wasReleasedThisFrame)
+        {
+            if (!ButtonsHeld.Held(button))
+            {
+                sparkles.startColor = ColorPicker.GetColor(chord?.RootName);
+
+                if (chord == null)
+                {
+                    foreach (GameObject wall in walls)
+                        wall.GetComponent<WallScript>().StopPrimed();
+
+                    bassWall.GetComponent<BassWallScript>().StopAudio();
+
+                    sparkles.startColor = Color.black;
+                }
+                else
+                {
+                    foreach (GameObject wall in walls)
+                        wall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
+
+                    bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
+                }
+            }
+
+            foreach (GameObject wall in walls)
+                wall.GetComponent<WallScript>().Reprime();
+            ButtonsHeld.Release(button);
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("SoundWall"))
@@ -161,7 +380,7 @@ public class WandController : MonoBehaviour
                                         chord.Root    , chord.Third    ,  chord.Fifth    , chord.Top    ,
                                         chord.Root * 2, chord.Third * 2,  chord.Fifth * 2, chord.Top * 2};  // HIGHEST C6
                 break;
-            
+
             case Chord.RootLocation.DbEb:
                 voicing = new float[] { chord.Top / 4, chord.Root / 2, chord.Third / 2,  chord.Fifth / 2, // LOWEST Bb2
                                         chord.Top / 2, chord.Root    , chord.Third    ,  chord.Fifth    ,
@@ -210,7 +429,7 @@ public class WandController : MonoBehaviour
                                         chord.FifthName, chord.TopName, chord.RootName   , chord.ThirdName   ,
                                         chord.FifthName    , chord.TopName    , chord.RootName, chord.ThirdName}; // HIGHEST Bb5
                 break;
-                
+
             case Chord.RootLocation.GA:
                 voicing = new Note.Name[] { chord.ThirdName, chord.FifthName, chord.TopName, chord.RootName, // LOWEST Bb2
                                         chord.ThirdName, chord.FifthName, chord.TopName, chord.RootName   ,
@@ -220,6 +439,10 @@ public class WandController : MonoBehaviour
 
         //print("this");
         return voicing;
+    }
+    private void Disconnect(PlayerInput input)
+    {
+        Destroy(playerInput.gameObject);
     }
 }
 
