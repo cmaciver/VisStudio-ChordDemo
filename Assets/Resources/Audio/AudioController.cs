@@ -69,7 +69,7 @@ public class AudioController
             new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A }});
     private static readonly Mode hminor = new(
         new Note.Name[][] {
-            new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.B },
+            new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb },
             new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C },
             new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D },
             new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb },
@@ -248,7 +248,9 @@ public class AudioController
         bool six = gamepad.buttonWest.wasPressedThisFrame;
         bool seven = gamepad.buttonEast.wasPressedThisFrame;
         bool eight = gamepad.buttonNorth.wasPressedThisFrame;
+
         bool silence = gamepad.leftTrigger.wasPressedThisFrame;
+        bool spice = gamepad.rightTrigger.isPressed;
 
         int degree = 0;
 
@@ -276,7 +278,7 @@ public class AudioController
         Note.Name rootName = Note.Up(names[0], offset);
         Note.Name thirdName = Note.Up(names[1], offset);
         Note.Name fifthName = Note.Up(names[2], offset);
-        Note.Name topName = Note.Up(names[0], offset);
+        Note.Name topName = Note.Up(names[spice ? 3 : 0], offset);
 
         if (names.Length == 4)
             return new Chord(

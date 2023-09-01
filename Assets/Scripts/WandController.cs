@@ -294,7 +294,8 @@ public class WandController : MonoBehaviour
     {
         if (ButtonsHeld.Update() && activeWall != null)
         {
-            if (pitchMult == null)
+            sparkles.startColor = ColorPicker.GetColor(chord?.RootName);
+            if (chord == null)
             {
                 activeWall.GetComponent<WallScript>().StopPrimed();
                 bassWall.GetComponent<BassWallScript>().StopAudio();
