@@ -26,7 +26,11 @@ public class WandController : MonoBehaviour
 
     private ParticleSystem.MainModule sparkles;
 
-    private AudioController.Layout layout = AudioController.Layout.Scale;
+    public enum Layout { Scale, Melodic, Advanced };
+    [SerializeField] private Layout layout = Layout.Scale;
+    [SerializeField] private AudioController.Tuning tuning = AudioController.Tuning.Equal;
+    [SerializeField] private Note.Name scaleLetter = Note.Name.C;
+    [SerializeField] private AudioController.ScaleMode mode = AudioController.ScaleMode.Major;
 
     private static class ButtonsHeld
     {
@@ -76,7 +80,7 @@ public class WandController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ac = new(AudioController.Tuning.Equal, layout);
+        ac = new(tuning, scaleLetter, mode);
 
         walls = GameObject.FindGameObjectsWithTag("SoundWall");
 
@@ -93,15 +97,15 @@ public class WandController : MonoBehaviour
         Gamepad gamepad = Gamepad.all[playerInput.playerIndex];
         switch (layout)
         {
-            case AudioController.Layout.Advanced:
+            case Layout.Advanced:
                 AdvancedLayout(gamepad);
                 break;
 
-            case AudioController.Layout.Melodic:
+            case Layout.Melodic:
                 MelodicLayout(gamepad);
                 break;
 
-            case AudioController.Layout.Scale:
+            case Layout.Scale:
                 ScaleLayout(gamepad);
                 break;
         }
@@ -112,7 +116,7 @@ public class WandController : MonoBehaviour
         // LS Press
         if (gamepad.leftShoulder.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordAdvanced(gamepad);
 
             //if (sparkles.k)
 
@@ -153,7 +157,7 @@ public class WandController : MonoBehaviour
         // LT Press
         if (gamepad.leftTrigger.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordAdvanced(gamepad);
             if (chord == null)
             {
                 pitchMult = null;
@@ -193,7 +197,7 @@ public class WandController : MonoBehaviour
         // RS Press
         if (gamepad.rightShoulder.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordAdvanced(gamepad);
             if (chord == null)
             {
                 bassWall.GetComponent<BassWallScript>().StopAudio();
@@ -212,7 +216,7 @@ public class WandController : MonoBehaviour
         // LS Press
         if (gamepad.leftShoulder.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordMelodic(gamepad);
 
             //if (sparkles.k)
 
@@ -250,7 +254,7 @@ public class WandController : MonoBehaviour
         // LT Press
         if (gamepad.leftTrigger.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordMelodic(gamepad);
             if (chord == null)
             {
                 pitchMult = null;
@@ -293,10 +297,12 @@ public class WandController : MonoBehaviour
             if (pitchMult == null)
             {
                 activeWall.GetComponent<WallScript>().StopPrimed();
+                bassWall.GetComponent<BassWallScript>().StopAudio();
             }
             else
             {
                 activeWall.GetComponent<WallScript>().PlayPrimed(pitchMult, pitchNames, chord);
+                bassWall.GetComponent<BassWallScript>().PlayAudio(chord);
             }
         }
 
@@ -317,7 +323,7 @@ public class WandController : MonoBehaviour
     {
         if (buttonControl.wasPressedThisFrame)
         {
-            chord = ac.GetChord(gamepad);
+            chord = ac.GetChordScale(gamepad);
             if (chord != null)
             {
                 pitchMult = GetVoicing(chord);
@@ -440,6 +446,17 @@ public class WandController : MonoBehaviour
         //print("this");
         return voicing;
     }
+
+    private void OnValidate()
+    {
+        if (ac != null)
+        {
+            ac.SetTuning(tuning);
+            ac.SetScale(scaleLetter);
+            ac.SetMode(mode);
+        }
+    }
+
     private void Disconnect(PlayerInput input)
     {
         Destroy(playerInput.gameObject);

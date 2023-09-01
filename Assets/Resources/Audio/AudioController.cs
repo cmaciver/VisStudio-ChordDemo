@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class AudioController
 {
 #pragma warning disable
-    private readonly struct Pitch
+    public readonly struct Pitch
     {
         public Pitch(float m3, float M3, float d5, float p5, float a5, float d7, float h7, float m7, float M7)
         {
@@ -44,53 +45,20 @@ public class AudioController
 
     private readonly struct Mode
     {
-        public Mode(float[][] pitches, Note.Name[][] names)
+        public Mode(Note.Name[][] names)
         {
-            this.pitches = pitches;
             this.names = names;
         }
 
-        public float[] GetPitch(int degree)
-        {
-            float mult = 1f;
-
-            degree--;
-            while (degree < 0)
-            {
-                degree += pitches.Length;
-                mult *= 0.5f;
-            }
-            while (degree >= pitches.Length)
-            {
-                degree -= pitches.Length;
-                mult *= 2f;
-            }
-
-            float[] ret = pitches[degree];
-            for (int i = 0; i < ret.Length; i++)
-                ret[i] *= mult;
-
-            return ret;
-        }
-
-        public Note.Name[] GetName(int degree)
+        public Note.Name[] GetNames(int degree)
         {
             return names[(degree - 1) % names.Length];
         }
 
-        private float[][] pitches { get; }
         private Note.Name[][] names { get; }
     }
 
     private static readonly Mode major = new(
-        new float[][] {
-            new float[] { 1f, 1.25992104989f, 1.49830707688f, 1.88774862536f },
-            new float[] { 1.12246204831f, 1.33483985417f, 1.68179283051f, 2f },
-            new float[] { 1.25992104989f, 1.49830707688f, 1.49830707688f, 2f * 1.12246204831f },
-            new float[] { 1.33483985417f, 1.68179283051f, 2f, 2f * 1.25992104989f },
-            new float[] { 1.49830707688f, 1.88774862536f, 2f * 1.12246204831f, 2f * 1.33483985417f },
-            new float[] { 1.68179283051f , 2f, 2f * 1.25992104989f, 2f * 1.49830707688f },
-            new float[] { 1.88774862536f, 2f * 1.12246204831f, 2f * 1.33483985417f, 2f * 1.68179283051f } },
         new Note.Name[][] {
             new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.B },
             new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C },
@@ -98,291 +66,233 @@ public class AudioController
             new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.E },
             new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F },
             new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.G },
-            new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.F, Note.Name.A }});
+            new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A }});
+    private static readonly Mode hminor = new(
+        new Note.Name[][] {
+            new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.B },
+            new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C },
+            new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D },
+            new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb },
+            new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F },
+            new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G },
+            new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A }});
 
     public enum Tuning { Equal, Just, Mean };
-    public enum Layout { Scale, Melodic, Advanced };
+    public enum ScaleMode { Major, HarmonicMinor };
 
-
-    private readonly Pitch pitch;
-    private Layout layout;
     private Mode mode;
     private int offset;
 
     private AudioClip[] clips;
     private int clip = 0;
 
-    public AudioController(Tuning tuning, Layout layout)
+    public AudioController(Tuning tuning, Note.Name scaleLetter, ScaleMode mode)
     {
-        switch (tuning)
-        {
-            case Tuning.Equal:
-                pitch = equal;
-                break;
-            case Tuning.Just:
-                pitch = just;
-                break;
-            case Tuning.Mean:
-                pitch = mean;
-                break;
-        }
+        SetTuning(tuning);
 
-        mode = major;
-        offset = (int)Note.Name.Bb - 2;
-
-        this.layout = layout;
+        SetScale(scaleLetter);
+        SetMode(mode);
 
         clips = Resources.LoadAll<AudioClip>("Audio/Sounds");
     }
 
-    public void SetLayout(Layout layout)
+    public void SetScale(Note.Name letter)
     {
-        this.layout = layout;
+        offset = (int)letter - 2;
     }
 
-    public Chord GetChord(Gamepad gamepad)
+    public void SetMode(ScaleMode scaleMode)
+    {
+        mode = scaleMode switch
+        {
+            ScaleMode.Major => major,
+            ScaleMode.HarmonicMinor => hminor,
+        };
+    }
+
+    public void SetTuning(Tuning tuning)
+    {
+        switch (tuning)
+        {
+            case Tuning.Equal:
+                Chord.SetPitch(equal);
+                break;
+            case Tuning.Just:
+                Chord.SetPitch(just);
+                break;
+            case Tuning.Mean:
+                Chord.SetPitch(mean);
+                break;
+        }
+    }
+
+    public Chord GetChordAdvanced(Gamepad gamepad)
+    {
+        Note.Name rootName;
+        Note.Name thirdName;
+        Note.Name fifthName;
+        Note.Name topName;
+
+        string rootPos;
+
+        bool up = gamepad.dpad.up.isPressed; // G (5)
+        bool right = gamepad.dpad.right.isPressed; // F (4)
+        bool down = gamepad.dpad.down.isPressed; // C (1)
+        bool left = gamepad.dpad.left.isPressed; // D (2)
+
+        if (up || right || down || left)
+        {
+            if (down) // C
+                rootName = Note.Name.C;
+            else if (right) // F
+                rootName = Note.Name.F;
+            else if (left) // D
+                rootName = Note.Name.D;
+            else // G
+                rootName = Note.Name.G;
+
+            bool rsDead = gamepad.rightStick.ReadValue().magnitude < 0.4f;
+            bool rsVert = Mathf.Abs(gamepad.rightStick.y.ReadValue()) >= Mathf.Abs(gamepad.rightStick.x.ReadValue());
+            bool rsUp = !rsDead && gamepad.rightStick.y.ReadValue() > 0.0f && rsVert;
+            bool rsDown = !rsDead && gamepad.rightStick.y.ReadValue() < -0.0f && rsVert;
+            bool rsRight = !rsDead && gamepad.rightStick.x.ReadValue() > 0.0f && !rsVert;
+            bool rsLeft = !rsDead && gamepad.rightStick.x.ReadValue() < -0.0f && !rsVert;
+
+            if (rsUp)
+                rootName = Note.Up(rootName, 2);
+            else if (rsDown)
+                rootName = Note.Down(rootName, 2);
+            else if (rsRight)
+                rootName = Note.Up(rootName);
+            else if (rsLeft)
+                rootName = Note.Down(rootName);
+
+            bool north = gamepad.buttonNorth.isPressed;
+            bool east = gamepad.buttonEast.isPressed;
+            bool south = gamepad.buttonSouth.isPressed;
+            bool west = gamepad.buttonWest.isPressed;
+
+            if (south)
+                thirdName = Note.Up(rootName, 3);
+            else
+                thirdName = Note.Up(rootName, 4);
+
+            if (west)
+            {
+                if (south)
+                    fifthName = Note.Up(rootName, 6);
+                else
+                    fifthName = Note.Up(rootName, 8);
+            }
+            else
+                fifthName = Note.Up(rootName, 7);
+
+            if (north)
+            {
+                if (east)
+                    topName = Note.Down(rootName, 3);
+                else
+                    topName = Note.Down(rootName, 1);
+            }
+            else
+            {
+                if (east)
+                    topName = Note.Down(rootName, 2);
+                else
+                    topName = rootName;
+            }
+        }
+        else
+            return null;
+
+        Chord chord = new(
+            rootName,
+            thirdName,
+            fifthName,
+            topName
+        );
+
+        return chord;
+    }
+    public Chord GetChordMelodic(Gamepad gamepad)
     {
         // Default values to stop compiler from giving errors
-        float rootPitch = 1f;
-        float thirdPitch = pitch.M3;
-        float fifthPitch = pitch.p5;
-        float topPitch = pitch.p8;
-
         Note.Name rootName = Note.Name.C;
         Note.Name thirdName = Note.Name.E;
         Note.Name fifthName = Note.Name.G;
         Note.Name topName = Note.Name.C;
 
-        Chord.RootLocation rootLoc = Chord.RootLocation.BbC;
-        Chord.ThirdTypeE thirdType = Chord.ThirdTypeE.Major;
-        Chord.SeventhTypeE seventhType = Chord.SeventhTypeE.None;
-
         string rootPos;
 
-        switch (layout) {
-            case Layout.Advanced:
-                float thirdMult;
-                float fifthMult;
-                float topMult;
-
-                bool up = gamepad.dpad.up.isPressed; // G (5)
-                bool right = gamepad.dpad.right.isPressed; // F (4)
-                bool down = gamepad.dpad.down.isPressed; // C (1)
-                bool left = gamepad.dpad.left.isPressed; // D (2)
-
-                if (up || right || down || left)
-                {
-                    if (down) // C
-                    {
-                        rootPitch = 1f;
-                        rootName = Note.Name.C;
-                    }
-                    else if (right) // F
-                    {
-                        rootPitch = 1.33483985417f;
-                        rootName = Note.Name.F;
-                    }
-                    else if (left) // D
-                    {
-                        rootPitch = 1.12246204831f;
-                        rootName = Note.Name.D;
-                    }
-                    else // G
-                    {
-                        rootPitch = 1.49830707688f;
-                        rootName = Note.Name.G;
-                    }
-
-                    bool rsDead = gamepad.rightStick.ReadValue().magnitude < 0.4f;
-                    bool rsVert = Mathf.Abs(gamepad.rightStick.y.ReadValue()) >= Mathf.Abs(gamepad.rightStick.x.ReadValue());
-                    bool rsUp = !rsDead && gamepad.rightStick.y.ReadValue() > 0.0f && rsVert;
-                    bool rsDown = !rsDead && gamepad.rightStick.y.ReadValue() < -0.0f && rsVert;
-                    bool rsRight = !rsDead && gamepad.rightStick.x.ReadValue() > 0.0f && !rsVert;
-                    bool rsLeft = !rsDead && gamepad.rightStick.x.ReadValue() < -0.0f && !rsVert;
-
-                    if (rsUp)
-                    {
-                        rootPitch *= pitch.wholetone;
-                        rootName = Note.Up(rootName, 2);
-                    }
-                    else if (rsDown)
-                    {
-                        rootPitch /= pitch.wholetone;
-                        rootName = Note.Down(rootName, 2);
-                    }
-                    else if (rsRight)
-                    {
-                        rootPitch *= pitch.semitone;
-                        rootName = Note.Up(rootName);
-                    }
-                    else if (rsLeft)
-                    {
-                        rootPitch /= pitch.semitone;
-                        rootName = Note.Down(rootName);
-                    }
-
-                    if (rootPitch < 1.02930223664f)
-                        rootLoc = Chord.RootLocation.BbC;
-                    else if (rootPitch < 1.2240535433f)
-                        rootLoc = Chord.RootLocation.DbEb;
-                    else if (rootPitch < 1.45565318284f)
-                        rootLoc = Chord.RootLocation.EGb;
-                    else
-                        rootLoc = Chord.RootLocation.GA;
-
-                    bool north = gamepad.buttonNorth.isPressed;
-                    bool east = gamepad.buttonEast.isPressed;
-                    bool south = gamepad.buttonSouth.isPressed;
-                    bool west = gamepad.buttonWest.isPressed;
-
-                    if (south)
-                    {
-                        thirdMult = pitch.m3;
-                        thirdName = Note.Up(rootName, 3);
-                        thirdType = Chord.ThirdTypeE.Minor;
-                    }
-                    else
-                    {
-                        thirdMult = pitch.M3;
-                        thirdName = Note.Up(rootName, 4);
-                        thirdType = Chord.ThirdTypeE.Major;
-                    }
-
-                    if (west)
-                    {
-                        if (south)
-                        {
-                            fifthMult = pitch.d5;
-                            fifthName = Note.Up(rootName, 6);
-                        }
-                        else
-                        {
-                            fifthMult = pitch.a5;
-                            fifthName = Note.Up(rootName, 8);
-                        }
-                    }
-                    else
-                    {
-                        fifthMult = pitch.p5;
-                        fifthName = Note.Up(rootName, 7);
-                    }
-
-                    if (north)
-                    {
-                        if (east)
-                        {
-                            topMult = pitch.d7;
-                            seventhType = Chord.SeventhTypeE.Diminished;
-                            topName = Note.Down(rootName, 3);
-                        }
-                        else
-                        {
-                            topMult = pitch.M7;
-                            seventhType = Chord.SeventhTypeE.Major;
-                            topName = Note.Down(rootName, 1);
-                        }
-                    }
-                    else
-                    {
-                        if (east)
-                        {
-                            if (south)
-                                topMult = pitch.m7;
-                            else
-                                topMult = pitch.h7;
-
-                            seventhType = Chord.SeventhTypeE.Minor;
-                            topName = Note.Down(rootName, 2);
-                        }
-                        else
-                        {
-                            topMult = pitch.p8;
-                            seventhType = Chord.SeventhTypeE.None;
-                            topName = rootName;
-                        }
-                    }
-
-                    thirdPitch = rootPitch * thirdMult;
-                    fifthPitch = rootPitch * fifthMult;
-                    topPitch = rootPitch * topMult;
-                }
-                else
-                    return null;
-                break;
-
-            case Layout.Melodic:
-                // TODO
-                break;
-
-            case Layout.Scale:
-                bool one = gamepad.dpad.down.wasPressedThisFrame || gamepad.buttonNorth.wasPressedThisFrame;
-                bool two = gamepad.dpad.left.wasPressedThisFrame;
-                bool three = gamepad.dpad.right.wasPressedThisFrame;
-                bool four = gamepad.dpad.up.wasPressedThisFrame;
-                bool five = gamepad.buttonSouth.wasPressedThisFrame;
-                bool six = gamepad.buttonWest.wasPressedThisFrame;
-                bool seven = gamepad.buttonEast.wasPressedThisFrame;
-                bool silence = gamepad.leftTrigger.wasPressedThisFrame;
-
-                int degree = 0;
-                float pitchMult = Mathf.Pow(pitch.semitone, offset);
-
-                if (silence)
-                    return null;
-                else if (one)
-                    degree = 1;
-                else if (two)
-                    degree = 2;
-                else if (three)
-                    degree = 3;
-                else if (four)
-                    degree = 4;
-                else if (five)
-                    degree = 5;
-                else if (six)
-                    degree = 6;
-                else if (seven)
-                    degree = 7;
-
-                float[] pitches = mode.GetPitch(degree);
-                Note.Name[] names = mode.GetName(degree);
-
-                rootPitch = pitches[0] * pitchMult;
-                rootName = Note.Up(names[0], offset);
-                thirdPitch = pitches[1] * pitchMult;
-                thirdName = Note.Up(names[1], offset);
-                fifthPitch = pitches[2] * pitchMult;
-                fifthName = Note.Up(names[2], offset);
-                topPitch = pitches[0] * 2f * pitchMult;
-                topName = Note.Up(names[0], offset);
-
-                if (rootPitch < 1.02930223664f)
-                    rootLoc = Chord.RootLocation.BbC;
-                else if (rootPitch < 1.2240535433f)
-                    rootLoc = Chord.RootLocation.DbEb;
-                else if (rootPitch < 1.45565318284f)
-                    rootLoc = Chord.RootLocation.EGb;
-                else
-                    rootLoc = Chord.RootLocation.GA;
-
-                break;
-        }
+        // TODO
 
         Chord chord = new(
-            rootPitch,
-            thirdPitch,
-            fifthPitch,
-            topPitch,
             rootName,
             thirdName,
             fifthName,
-            topName,
-            rootLoc,
-            thirdType,
-            seventhType
+            topName
         );
 
         return chord;
+    }
+
+    public Chord GetChordScale(Gamepad gamepad)
+    {
+        string rootPos;
+
+        bool one = gamepad.dpad.down.wasPressedThisFrame;
+        bool two = gamepad.dpad.left.wasPressedThisFrame;
+        bool three = gamepad.dpad.right.wasPressedThisFrame;
+        bool four = gamepad.dpad.up.wasPressedThisFrame;
+        bool five = gamepad.buttonSouth.wasPressedThisFrame;
+        bool six = gamepad.buttonWest.wasPressedThisFrame;
+        bool seven = gamepad.buttonEast.wasPressedThisFrame;
+        bool eight = gamepad.buttonNorth.wasPressedThisFrame;
+        bool silence = gamepad.leftTrigger.wasPressedThisFrame;
+
+        int degree = 0;
+
+        if (silence)
+            return null;
+        else if (one)
+            degree = 1;
+        else if (two)
+            degree = 2;
+        else if (three)
+            degree = 3;
+        else if (four)
+            degree = 4;
+        else if (five)
+            degree = 5;
+        else if (six)
+            degree = 6;
+        else if (seven)
+            degree = 7;
+        else if (eight)
+            degree = 8;
+
+        Note.Name[] names = mode.GetNames(degree);
+
+        Note.Name rootName = Note.Up(names[0], offset);
+        Note.Name thirdName = Note.Up(names[1], offset);
+        Note.Name fifthName = Note.Up(names[2], offset);
+        Note.Name topName = Note.Up(names[0], offset);
+
+        if (names.Length == 4)
+            return new Chord(
+                rootName,
+                thirdName,
+                fifthName,
+                topName
+            );
+        else
+            return new Chord(
+                rootName,
+                thirdName,
+                fifthName,
+                topName,
+                Note.Up(names[4], offset)
+            );
     }
 
     public AudioClip CurrentClip()
@@ -413,36 +323,96 @@ public class AudioController
 
 public class Chord
 {
+    private static AudioController.Pitch pitch { get; set; }
+
+    public static void SetPitch(AudioController.Pitch newPitch)
+    {
+        pitch = newPitch;
+    }
+
     public enum RootLocation { BbC, DbEb, EGb, GA }
     public enum ThirdTypeE { Minor, Major }
+    public enum FifthTypeE { Diminished, Perfect, Augmented }
     public enum SeventhTypeE { Diminished, Minor, Major, None }
 
-    public Chord(float root, float third, float fifth, float top,
-        Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName, RootLocation rootLoc, ThirdTypeE thirdType, SeventhTypeE seventhType)
+    public Chord(Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName)
+    : this(rootName, thirdName, fifthName, topName, rootName) { }
+
+    public Chord(Note.Name rootName, Note.Name thirdName, Note.Name fifthName, Note.Name topName, Note.Name bassName)
     {
-        Root = root;
-        Third = third;
-        Fifth = fifth;
-        Top = top;
         RootName = rootName;
         ThirdName = thirdName;
         FifthName = fifthName;
         TopName = topName;
-        RootLoc = rootLoc;
-        ThirdType = thirdType;
-        SeventhType = seventhType;
+        BassName = bassName;
+
+        RootLoc = RootName switch
+        {
+            <= Note.Name.C => RootLocation.BbC,
+            >= Note.Name.Db and <= Note.Name.Eb => RootLocation.DbEb,
+            >= Note.Name.E and <= Note.Name.Gb => RootLocation.EGb,
+            >= Note.Name.G => RootLocation.GA
+        };
+
+        int numNotes = Enum.GetNames(typeof(Note.Name)).Length;
+
+        ThirdType = ((ThirdName - RootName + numNotes) % numNotes) switch
+        {
+            3 => ThirdTypeE.Minor,
+            4 => ThirdTypeE.Major
+        };
+
+        FifthType = ((FifthName - RootName + numNotes) % numNotes) switch
+        {
+            6 => FifthTypeE.Diminished,
+            7 => FifthTypeE.Perfect,
+            8 => FifthTypeE.Augmented
+        };
+
+        SeventhType = ((TopName - RootName + numNotes) % numNotes) switch
+        {
+            0 => SeventhTypeE.None,
+            9 => SeventhTypeE.Diminished,
+            10 => SeventhTypeE.Minor,
+            11 => SeventhTypeE.Major
+        };
+
+        Root = Mathf.Pow(pitch.semitone, (int)RootName - 2);
+        Bass = Mathf.Pow(pitch.semitone, (int)BassName - 2);
+
+        Third = ThirdType switch
+        {
+            ThirdTypeE.Minor => Root * pitch.m3,
+            ThirdTypeE.Major => Root * pitch.M3
+        };
+        Fifth = FifthType switch
+        {
+            FifthTypeE.Diminished => Root * pitch.d5,
+            FifthTypeE.Perfect => Root * pitch.p5,
+            FifthTypeE.Augmented => Root * pitch.a5
+        };
+        Top = SeventhType switch
+        {
+            SeventhTypeE.Diminished => Root * pitch.d7,
+            SeventhTypeE.Minor => (ThirdType == ThirdTypeE.Minor) ? Root * pitch.m7 : Root * pitch.h7,
+            SeventhTypeE.Major => Root * pitch.M7,
+            SeventhTypeE.None => Root * pitch.p8,
+        };
     }
 
     public float Root { get; }
     public float Third { get; }
     public float Fifth { get; }
     public float Top { get; }
+    public float Bass { get; }
     public Note.Name RootName { get; }
     public Note.Name ThirdName { get; }
     public Note.Name FifthName { get; }
     public Note.Name TopName { get; }
+    public Note.Name BassName { get; }
     public RootLocation RootLoc { get; }
     public ThirdTypeE ThirdType { get; }
+    public FifthTypeE FifthType { get; }
     public SeventhTypeE SeventhType { get; }
 }
 

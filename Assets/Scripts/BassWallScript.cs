@@ -43,8 +43,8 @@ public class BassWallScript : MonoBehaviour {
 
     public void PlayAudio(Chord chord)
     {
-        float root = chord.Root;
-        float distance = ((float)chord.RootName + 0.5f) / 12;
+        float root = chord.Bass;
+        float distance = ((float)chord.BassName + 0.5f) / 12;
 
         lowSource.pitch = root / 8; // This really should be 16 in the real room but idk yet
         midSource.pitch = root / 4;
@@ -56,7 +56,7 @@ public class BassWallScript : MonoBehaviour {
 
         foreach (GameObject light in bassLights)
         {
-            light.GetComponent<BassLights>().ChangeColor(ColorPicker.GetColor(chord.RootName));
+            light.GetComponent<BassLights>().ChangeColor(ColorPicker.GetColor(chord.BassName));
             //Debug.Log("Updating Bass Light");
         }
     }
