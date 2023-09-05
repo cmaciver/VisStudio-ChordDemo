@@ -61,14 +61,23 @@ public class WandController : MonoBehaviour
             return held;
         }
 
-        public static void Press(Button button)
+        public static bool Press(Button button)
         {
+            for (int i = 0; i < timers.Length; i++)
+                if (timers[i] >= 0)
+                    return false;
+
             timers[(int)button] = 0;
+            return true;
         }
 
-        public static void Release(Button button)
+        public static bool Release(Button button)
         {
+            if (timers[(int)button] == -1)
+                return false;
+
             timers[(int)button] = -1;
+            return true;
         }
 
         public static bool Held(Button button)
@@ -322,7 +331,7 @@ public class WandController : MonoBehaviour
 
     private void ScaleLayoutCheck(Gamepad gamepad, UnityEngine.InputSystem.Controls.ButtonControl buttonControl, ButtonsHeld.Button button)
     {
-        if (buttonControl.wasPressedThisFrame)
+        if (buttonControl.wasPressedThisFrame && ButtonsHeld.Press(button))
         {
             chord = ac.GetChordScale(gamepad);
             if (chord != null)
@@ -330,9 +339,8 @@ public class WandController : MonoBehaviour
                 pitchMult = GetVoicing(chord);
                 pitchNames = GetVoicingNames(chord);
             }
-            ButtonsHeld.Press(button);
         }
-        if (buttonControl.wasReleasedThisFrame)
+        if (buttonControl.wasReleasedThisFrame && ButtonsHeld.Release(button))
         {
             if (!ButtonsHeld.Held(button))
             {
@@ -358,7 +366,6 @@ public class WandController : MonoBehaviour
 
             foreach (GameObject wall in walls)
                 wall.GetComponent<WallScript>().Reprime();
-            ButtonsHeld.Release(button);
         }
     }
 

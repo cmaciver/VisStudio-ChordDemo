@@ -45,37 +45,51 @@ public class AudioController
 
     private readonly struct Mode
     {
-        public Mode(Note.Name[][] names)
+        public Mode(Note.Name[][][] names)
         {
             this.names = names;
         }
 
-        public Note.Name[] GetNames(int degree)
+        public Note.Name[] GetNames(int degree, bool spicy)
         {
-            return names[(degree - 1) % names.Length];
+            return names[(degree - 1) % names.Length][spicy ? 1 : 0];
         }
 
-        private Note.Name[][] names { get; }
+        private Note.Name[][][] names { get; }
     }
 
     private static readonly Mode major = new(
-        new Note.Name[][] {
-            new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.B },
-            new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C },
-            new Note.Name[] { Note.Name.E, Note.Name.G, Note.Name.B, Note.Name.D },
-            new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.E },
-            new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F },
-            new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.G },
-            new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A }});
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.B } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.D },
+                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.E, Note.Name.G, Note.Name.B, Note.Name.E },
+                                new Note.Name[] { Note.Name.E, Note.Name.G, Note.Name.B, Note.Name.D } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.F },
+                                new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.E } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.A },
+                                new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
+                                new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
     private static readonly Mode hminor = new(
-        new Note.Name[][] {
-            new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb },
-            new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C },
-            new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D },
-            new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb },
-            new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F },
-            new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G },
-            new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A }});
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.D },
+                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
+                                new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.F },
+                                new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
+                                new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
 
     public enum Tuning { Equal, Just, Mean };
     public enum ScaleMode { Major, HarmonicMinor };
@@ -250,7 +264,7 @@ public class AudioController
         bool eight = gamepad.buttonNorth.wasPressedThisFrame;
 
         bool silence = gamepad.leftTrigger.wasPressedThisFrame;
-        bool spice = gamepad.rightTrigger.isPressed;
+        bool spicy = gamepad.rightTrigger.isPressed;
 
         int degree = 0;
 
@@ -273,12 +287,12 @@ public class AudioController
         else if (eight)
             degree = 8;
 
-        Note.Name[] names = mode.GetNames(degree);
+        Note.Name[] names = mode.GetNames(degree, spicy);
 
         Note.Name rootName = Note.Up(names[0], offset);
         Note.Name thirdName = Note.Up(names[1], offset);
         Note.Name fifthName = Note.Up(names[2], offset);
-        Note.Name topName = Note.Up(names[spice ? 3 : 0], offset);
+        Note.Name topName = Note.Up(names[3], offset);
 
         if (names.Length == 4)
             return new Chord(
