@@ -90,9 +90,25 @@ public class AudioController
                                 new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
             new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
                                 new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
+    private static readonly Mode phrygiand = new(
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Db, Note.Name.F, Note.Name.Ab, Note.Name.Db },
+                                new Note.Name[] { Note.Name.Db, Note.Name.F, Note.Name.Ab, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
+                                new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Db } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.F },
+                                new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Bb },
+                                new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Ab } } });
 
     public enum Tuning { Equal, Just, Mean };
-    public enum ScaleMode { Major, HarmonicMinor };
+    public enum ScaleMode { Major, HarmonicMinor, PhrygianDominant };
 
     private Mode mode;
     private int offset;
@@ -100,19 +116,19 @@ public class AudioController
     private AudioClip[] clips;
     private int clip = 0;
 
-    public AudioController(Tuning tuning, Note.Name scaleLetter, ScaleMode mode)
+    public AudioController(Tuning tuning, Note.Name key, ScaleMode mode)
     {
         SetTuning(tuning);
 
-        SetScale(scaleLetter);
+        SetKey(key);
         SetMode(mode);
 
         clips = Resources.LoadAll<AudioClip>("Audio/Sounds");
     }
 
-    public void SetScale(Note.Name letter)
+    public void SetKey(Note.Name key)
     {
-        offset = (int)letter - 2;
+        offset = (int)key - 2;
     }
 
     public void SetMode(ScaleMode scaleMode)
@@ -121,6 +137,7 @@ public class AudioController
         {
             ScaleMode.Major => major,
             ScaleMode.HarmonicMinor => hminor,
+            ScaleMode.PhrygianDominant => phrygiand,
         };
     }
 

@@ -29,7 +29,7 @@ public class WandController : MonoBehaviour
     public enum Layout { Scale, Melodic, Advanced };
     [SerializeField] private Layout layout = Layout.Scale;
     [SerializeField] private AudioController.Tuning tuning = AudioController.Tuning.Equal;
-    [SerializeField] private Note.Name scaleLetter = Note.Name.C;
+    [SerializeField] private Note.Name key = Note.Name.C;
     [SerializeField] private AudioController.ScaleMode mode = AudioController.ScaleMode.Major;
 
     private static class ButtonsHeld
@@ -89,7 +89,7 @@ public class WandController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ac = new(tuning, scaleLetter, mode);
+        ac = new(tuning, key, mode);
 
         walls = GameObject.FindGameObjectsWithTag("SoundWall");
 
@@ -340,9 +340,9 @@ public class WandController : MonoBehaviour
                 pitchNames = GetVoicingNames(chord);
             }
         }
-        if (buttonControl.wasReleasedThisFrame && ButtonsHeld.Release(button))
+        if (buttonControl.wasReleasedThisFrame)
         {
-            if (!ButtonsHeld.Held(button))
+            if (!ButtonsHeld.Held(button) && ButtonsHeld.Release(button))
             {
                 sparkles.startColor = ColorPicker.GetColor(chord?.RootName);
 
@@ -366,6 +366,7 @@ public class WandController : MonoBehaviour
 
             foreach (GameObject wall in walls)
                 wall.GetComponent<WallScript>().Reprime();
+            ButtonsHeld.Release(button);
         }
     }
 
@@ -460,7 +461,7 @@ public class WandController : MonoBehaviour
         if (ac != null)
         {
             ac.SetTuning(tuning);
-            ac.SetScale(scaleLetter);
+            ac.SetKey(key);
             ac.SetMode(mode);
         }
     }
