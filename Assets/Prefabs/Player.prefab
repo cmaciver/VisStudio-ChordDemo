@@ -5067,6 +5067,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6dbecb99-1c90-4402-b289-b68a45317b16
     m_ActionName: Weapons/New action[/DualShock4GamepadHID/rightStick/up,/DualShock4GamepadHID1/rightStick/up,/DualShock4GamepadHID/rightStick/down,/DualShock4GamepadHID1/rightStick/down,/DualShock4GamepadHID/rightStick/left,/DualShock4GamepadHID1/rightStick/left,/DualShock4GamepadHID/rightStick/right,/DualShock4GamepadHID1/rightStick/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dcc07f50-a9c8-49d8-a7ec-f25308434a83
+    m_ActionName: Music/gyro0
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Any
   m_DefaultActionMap: Music
@@ -5081,11 +5085,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 551266082838318165}
+  - component: {fileID: 4402576512899974325}
   - component: {fileID: 2017241889654128490}
   - component: {fileID: 2747682275025990861}
   - component: {fileID: 5217980943450942477}
   - component: {fileID: 2697568807601015619}
-  - component: {fileID: 4402576512899974325}
   m_Layer: 0
   m_Name: Wand
   m_TagString: Untagged
@@ -5109,6 +5113,23 @@ Transform:
   m_Father: {fileID: 5183003527763857081}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &4402576512899974325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7517338874930735728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4882f967da79d7049bed1cdb5976b4a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInput: {fileID: 7327684504031136789}
+  layout: 0
+  tuning: 0
+  scaleLetter: 2
+  mode: 0
 --- !u!33 &2017241889654128490
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5188,15 +5209,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4402576512899974325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7517338874930735728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4882f967da79d7049bed1cdb5976b4a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

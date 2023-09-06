@@ -12,7 +12,6 @@ public class BassLights : MonoBehaviour
     void Start()
     {
         mat = GetComponent<Renderer>().material;
-        Debug.Log(GetComponent<Renderer>().bounds.size);
     }
 
     private void Update()
