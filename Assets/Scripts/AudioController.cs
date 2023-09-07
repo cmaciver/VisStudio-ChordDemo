@@ -78,8 +78,8 @@ public class AudioController
         new Note.Name[][][] {
             new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
                                 new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb } },
-            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.D },
-                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.A, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.C },
+                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.B } },
             new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
                                 new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D } },
             new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.F },
@@ -280,7 +280,7 @@ public class AudioController
         bool seven = gamepad.buttonEast.wasPressedThisFrame;
         bool eight = gamepad.buttonNorth.wasPressedThisFrame;
 
-        bool silence = gamepad.leftTrigger.wasPressedThisFrame;
+        bool silence = gamepad.leftTrigger.wasPressedThisFrame | gamepad.leftShoulder.wasPressedThisFrame;
         bool spicy = gamepad.rightTrigger.isPressed;
 
         int degree = 0;

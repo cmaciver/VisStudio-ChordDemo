@@ -34,7 +34,7 @@ public class WandController : MonoBehaviour
 
     private static class ButtonsHeld
     {
-        public enum Button { d_down, d_left, d_right, d_up, f_down, f_left, f_right, f_up, l_trigger }
+        public enum Button { d_down, d_left, d_right, d_up, f_down, f_left, f_right, f_up, l_trigger, l_shoulder }
 
         private static readonly float[] DEFAULT = Enumerable.Repeat(-1f, Enum.GetValues(typeof(Button)).Length).ToArray();
         public static float[] timers = DEFAULT;
@@ -220,7 +220,7 @@ public class WandController : MonoBehaviour
         }
     }
 
-    private void MelodicLayout(Gamepad gamepad)
+    private void MelodicLayout(Gamepad gamepad) // TODO
     {
         // LS Press
         if (gamepad.leftShoulder.wasPressedThisFrame)
@@ -327,6 +327,8 @@ public class WandController : MonoBehaviour
         ScaleLayoutCheck(gamepad, gamepad.buttonNorth, ButtonsHeld.Button.f_up);
 
         ScaleLayoutCheck(gamepad, gamepad.leftTrigger, ButtonsHeld.Button.l_trigger);
+
+        ScaleLayoutCheck(gamepad, gamepad.leftShoulder, ButtonsHeld.Button.l_shoulder);
     }
 
     private void ScaleLayoutCheck(Gamepad gamepad, UnityEngine.InputSystem.Controls.ButtonControl buttonControl, ButtonsHeld.Button button)
