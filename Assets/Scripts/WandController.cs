@@ -327,7 +327,6 @@ public class WandController : MonoBehaviour
         ScaleLayoutCheck(gamepad, gamepad.buttonNorth, ButtonsHeld.Button.f_up);
 
         ScaleLayoutCheck(gamepad, gamepad.leftTrigger, ButtonsHeld.Button.l_trigger);
-
         ScaleLayoutCheck(gamepad, gamepad.leftShoulder, ButtonsHeld.Button.l_shoulder);
     }
 
