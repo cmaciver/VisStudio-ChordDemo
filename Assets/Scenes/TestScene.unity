@@ -1252,23 +1252,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 770802550}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &864386715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 864386710}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4882f967da79d7049bed1cdb5976b4a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInput: {fileID: 0}
-  layout: 0
-  tuning: 0
-  key: 2
-  mode: 0
 --- !u!54 &864386716
 Rigidbody:
   m_ObjectHideFlags: 0
