@@ -1066,6 +1066,11 @@ PrefabInstance:
       propertyPath: mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5991636632983347605, guid: 1d211cc5cf03cde42a054db97a2932bc,
+        type: 3}
+      propertyPath: layout
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6122393235678495020, guid: 1d211cc5cf03cde42a054db97a2932bc,
         type: 3}
       propertyPath: m_IsActive

@@ -5069,7 +5069,7 @@ MonoBehaviour:
     m_ActionName: Weapons/New action[/DualShock4GamepadHID/rightStick/up,/DualShock4GamepadHID1/rightStick/up,/DualShock4GamepadHID/rightStick/down,/DualShock4GamepadHID1/rightStick/down,/DualShock4GamepadHID/rightStick/left,/DualShock4GamepadHID1/rightStick/left,/DualShock4GamepadHID/rightStick/right,/DualShock4GamepadHID1/rightStick/right]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: dcc07f50-a9c8-49d8-a7ec-f25308434a83
+    m_ActionId: b8571ae5-b8db-4cc4-b1f2-ad84604991a2
     m_ActionName: Music/gyro0
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Any
@@ -5128,7 +5128,7 @@ MonoBehaviour:
   playerInput: {fileID: 7327684504031136789}
   layout: 0
   tuning: 0
-  scaleLetter: 2
+  key: 2
   mode: 0
 --- !u!33 &2017241889654128490
 MeshFilter:

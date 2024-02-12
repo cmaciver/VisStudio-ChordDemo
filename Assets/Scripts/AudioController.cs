@@ -58,6 +58,7 @@ public class AudioController
         private Note.Name[][][] names { get; }
     }
 
+    // all of the beginner modes go here, using C as key center
     private static readonly Mode major = new(
         new Note.Name[][][] {
             new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C },
@@ -74,10 +75,45 @@ public class AudioController
                                 new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.G } },
             new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
                                 new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
+
+    private static readonly Mode hmajor = new(
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.B } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.D },
+                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.C } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.E, Note.Name.G, Note.Name.B, Note.Name.E },
+                                new Note.Name[] { Note.Name.E, Note.Name.G, Note.Name.B, Note.Name.D } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.F },
+                                new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.E } }, // minor major 7
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.E, Note.Name.Ab },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.E, Note.Name.G } }, // augmented major 7, this works but then what doesn't ?
+            new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.F, Note.Name.B },
+                                new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.F, Note.Name.Ab } } }); // full dim 7
+
+    private static readonly Mode lminor = new(
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb } }, // maybe make this F/C
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.C }, // this is big idk
+                                new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.B } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
+                                new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.F },     // fmajor
+                                new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.E } },   // fmajor7
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.Bb, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Bb },
+                                new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Ab } } });
+
     private static readonly Mode hminor = new(
         new Note.Name[][][] {
             new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
-                                new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb } },
+                                new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.Bb } }, // maybe make this minor/major?
             new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.C },
                                 new Note.Name[] { Note.Name.D, Note.Name.F, Note.Name.Ab, Note.Name.B } },
             new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
@@ -88,28 +124,47 @@ public class AudioController
                                 new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
             new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
                                 new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
-            new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
+            new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },     // this kind of bass note override does work!
                                 new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
+
+
     private static readonly Mode phrygiand = new(
         new Note.Name[][][] {
             new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.Eb, Note.Name.G, Note.Name.C },
                                 new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C } },
             new Note.Name[][] { new Note.Name[] { Note.Name.Db, Note.Name.F, Note.Name.Ab, Note.Name.Db },
                                 new Note.Name[] { Note.Name.Db, Note.Name.F, Note.Name.Ab, Note.Name.C } },
-            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb }, // maybe change to C/E ?
                                 new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Db } },
             new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.F },
                                 new Note.Name[] { Note.Name.F, Note.Name.Ab, Note.Name.C, Note.Name.Eb } },
             new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
                                 new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F } },
             new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
-                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } }, // this should be Fm/Ab
             new Note.Name[][] { new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Bb },
                                 new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Ab } } });
 
-    public enum Tuning { Equal, Just, Mean };
-    public enum ScaleMode { Major, HarmonicMinor, PhrygianDominant };
+    private static readonly Mode majorUpMinor = new(
+        new Note.Name[][][] {
+            new Note.Name[][] { new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.C },
+                                new Note.Name[] { Note.Name.C, Note.Name.E, Note.Name.G, Note.Name.B } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.D, Note.Name.Gb, Note.Name.A, Note.Name.D }, // see if this spelling is supposed to be this weird
+                                new Note.Name[] { Note.Name.D, Note.Name.Gb, Note.Name.A, Note.Name.Db } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.Eb },
+                                new Note.Name[] { Note.Name.Eb, Note.Name.G, Note.Name.Bb, Note.Name.D } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.F },
+                                new Note.Name[] { Note.Name.F, Note.Name.A, Note.Name.C, Note.Name.E } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.G },
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.Gb } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
+                                new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
+            new Note.Name[][] { new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.Bb },
+                                new Note.Name[] { Note.Name.Bb, Note.Name.D, Note.Name.F, Note.Name.A } } });
 
+
+    public enum Tuning { Equal, Just, Mean };
+    public enum ScaleMode { Major, HarmonicMajor, LightMinor, HarmonicMinor, PhrygianDominant, MajorUpMinor };
     private Mode mode;
     private int offset;
 
@@ -136,8 +191,11 @@ public class AudioController
         mode = scaleMode switch
         {
             ScaleMode.Major => major,
+            ScaleMode.HarmonicMajor => hmajor,
+            ScaleMode.LightMinor => lminor,
             ScaleMode.HarmonicMinor => hminor,
             ScaleMode.PhrygianDominant => phrygiand,
+            ScaleMode.MajorUpMinor => majorUpMinor,
         };
     }
 
