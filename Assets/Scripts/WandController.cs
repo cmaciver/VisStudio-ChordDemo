@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 
 public class WandController : MonoBehaviour
 {
+    private int inputEnabled = 2;
+
     [SerializeField] private PlayerInput playerInput;
 
     private GameObject[] walls;
@@ -103,21 +105,26 @@ public class WandController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Gamepad gamepad = Gamepad.all[playerInput.playerIndex];
-        switch (layout)
+        if (inputEnabled == 2)
         {
-            case Layout.Advanced:
-                AdvancedLayout(gamepad);
-                break;
+            Gamepad gamepad = Gamepad.all[playerInput.playerIndex];
+            switch (layout)
+            {
+                case Layout.Advanced:
+                    AdvancedLayout(gamepad);
+                    break;
 
-            case Layout.Melodic:
-                MelodicLayout(gamepad);
-                break;
+                case Layout.Melodic:
+                    MelodicLayout(gamepad);
+                    break;
 
-            case Layout.Scale:
-                ScaleLayout(gamepad);
-                break;
+                case Layout.Scale:
+                    ScaleLayout(gamepad);
+                    break;
+            }
         }
+        else if (inputEnabled == 1)
+            inputEnabled = 2;
     }
 
     private void AdvancedLayout(Gamepad gamepad)
@@ -470,6 +477,33 @@ public class WandController : MonoBehaviour
     private void Disconnect(PlayerInput input)
     {
         Destroy(playerInput.gameObject);
+    }
+
+    public void EnableInput()
+    {
+        inputEnabled = 1;
+    }
+
+    public void DisableInput()
+    {
+        inputEnabled = 0;
+    }
+
+    public void SetLayout(Layout layout)
+    {
+        this.layout = layout;
+    }
+
+    public void SetKey(Note.Name key)
+    {
+        this.key = key;
+        ac = new(tuning, key, mode);
+    }
+
+    public void SetMode(AudioController.ScaleMode mode)
+    {
+        this.mode = mode;
+        ac = new(tuning, key, mode);
     }
 }
 

@@ -164,7 +164,7 @@ public class AudioController
 
 
     public enum Tuning { Equal, Just, Mean };
-    public enum ScaleMode { Major, HarmonicMajor, LightMinor, HarmonicMinor, PhrygianDominant, MajorUpMinor };
+    public enum ScaleMode { Major, Harmonic_Major, Light_Minor, Harmonic_Minor, Phrygian_Dominant, Major_Up_Minor };
     private Mode mode;
     private int offset;
 
@@ -191,11 +191,11 @@ public class AudioController
         mode = scaleMode switch
         {
             ScaleMode.Major => major,
-            ScaleMode.HarmonicMajor => hmajor,
-            ScaleMode.LightMinor => lminor,
-            ScaleMode.HarmonicMinor => hminor,
-            ScaleMode.PhrygianDominant => phrygiand,
-            ScaleMode.MajorUpMinor => majorUpMinor,
+            ScaleMode.Harmonic_Major => hmajor,
+            ScaleMode.Light_Minor => lminor,
+            ScaleMode.Harmonic_Minor => hminor,
+            ScaleMode.Phrygian_Dominant => phrygiand,
+            ScaleMode.Major_Up_Minor => majorUpMinor,
         };
     }
 

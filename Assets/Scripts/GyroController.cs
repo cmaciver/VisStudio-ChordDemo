@@ -54,6 +54,8 @@ sealed class GyroController : MonoBehaviour
     private int schemenum = 0;
     private Quaternion totalStickRotation = Quaternion.identity;
 
+    public float stickSensitivity = 1.0f;
+
     // Accumulation of gyro input
     Quaternion _accGyro = Quaternion.identity;
 
@@ -140,7 +142,7 @@ sealed class GyroController : MonoBehaviour
 
     public void MoveStick(InputAction.CallbackContext ctx)
     {
-        stickMovement = ctx.ReadValue<Vector2>();
+        stickMovement = stickSensitivity * ctx.ReadValue<Vector2>();
     }
 
     //Bluetooth DS4 and plugged in seem to act differently, press share to see if one of these two schemes works better
