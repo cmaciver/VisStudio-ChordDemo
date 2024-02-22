@@ -37,7 +37,7 @@ public class MenuController : MonoBehaviour
 
     public void Menu()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             Close();
         else
             Open();
@@ -51,7 +51,7 @@ public class MenuController : MonoBehaviour
         foreach (WandController wandController in FindObjectsOfType<WandController>())
             wandController.DisableInput();
 
-        menuCanvas.gameObject.SetActive(true);
+        menuCanvas.SetActive(true);
         head.Open();
 
         AudioListener.volume = volume * 0.5f;
@@ -62,44 +62,44 @@ public class MenuController : MonoBehaviour
         foreach (WandController wandController in FindObjectsOfType<WandController>())
             wandController.EnableInput();
 
-        menuCanvas.gameObject.SetActive(false);
+        menuCanvas.SetActive(false);
 
         AudioListener.volume = volume;
     }
 
     public void NavigateUp()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             head.NavigateUp();
     }
 
     public void NavigateDown()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             head.NavigateDown();
     }
 
     public void NavigateLeft()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             head.NavigateLeft();
     }
 
     public void NavigateRight()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             head.NavigateRight();
     }
 
     public void Select()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             head.Select();
     }
 
     public void Back()
     {
-        if (menuCanvas.gameObject.activeSelf)
+        if (menuCanvas.activeSelf)
             if (head.Back())
                 Close();
     }

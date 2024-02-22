@@ -620,6 +620,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 368989795}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   valueField: {fileID: 1948425773}
 --- !u!1 &211135874
 GameObject:
@@ -674,6 +676,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 641273785}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   credits: {fileID: 1130823198}
 --- !u!1 &277857954
 GameObject:
@@ -1441,7 +1445,6 @@ RectTransform:
   - {fileID: 1945446086}
   - {fileID: 899553659}
   - {fileID: 211135875}
-  - {fileID: 1756024115}
   m_Father: {fileID: 618176813}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1470,7 +1473,6 @@ MonoBehaviour:
   - {fileID: 1945446087}
   - {fileID: 899553660}
   - {fileID: 211135876}
-  hover: {fileID: 1756024114}
 --- !u!1001 &486530140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2073,6 +2075,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 1342446329}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   valueField: {fileID: 925764546}
 --- !u!4 &629170865 stripped
 Transform:
@@ -3260,6 +3264,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 1151245851}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   knob: {fileID: 1151245848}
   menuController: {fileID: 1287620177}
 --- !u!1 &925764544
@@ -3535,7 +3541,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SETTINGS
+  m_text: PAUSED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5121,9 +5127,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 2061841605}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   backgrounds:
   - {fileID: 93663475}
   - {fileID: 2010978065}
+  key: {fileID: 626902198}
+  mode: {fileID: 197312930}
 --- !u!1001 &1701147083
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5391,82 +5401,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!1 &1756024114
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1756024115}
-  - component: {fileID: 1756024117}
-  - component: {fileID: 1756024116}
-  m_Layer: 0
-  m_Name: '[TEMP] Hover'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1756024115
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756024114}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 463396104}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 250}
-  m_SizeDelta: {x: 1015, y: 115}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1756024116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756024114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c0203bbcde6de1e449d19f0e3cdb278f, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1756024117
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756024114}
-  m_CullTransparentMesh: 1
 --- !u!1001 &1770706937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5916,6 +5850,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
+  hoverObject: {fileID: 1374182065}
+  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   knob: {fileID: 1374182062}
 --- !u!1 &1948425771
 GameObject:

@@ -3,7 +3,6 @@ using UnityEngine;
 public class SettingsController : SubMenuAbstract
 {
     [SerializeField] MenuInteractableAbstract[] menuInteractables;
-    [SerializeField] GameObject hover;
 
     private int hovered;
 
@@ -17,11 +16,14 @@ public class SettingsController : SubMenuAbstract
     {
         if (GetCurrent() == this)
         {
-            hovered++;
-            if (hovered >= menuInteractables.Length)
-                hovered = 0;
+            menuInteractables[hovered].Unhover();
+            do {
+                hovered++;
+                if (hovered >= menuInteractables.Length)
+                    hovered = 0;
+            } while (!menuInteractables[hovered].GetInteractable());
 
-            hover.transform.position = menuInteractables[hovered].transform.position;
+            menuInteractables[hovered].Hover();
         }
         else
             GetCurrent().NavigateDown();
@@ -47,11 +49,14 @@ public class SettingsController : SubMenuAbstract
     {
         if (GetCurrent() == this)
         {
-            hovered--;
-            if (hovered < 0)
-                hovered = menuInteractables.Length - 1;
+            menuInteractables[hovered].Unhover();
+            do {
+                hovered--;
+                if (hovered < 0)
+                    hovered = menuInteractables.Length - 1;
+            } while (!menuInteractables[hovered].GetInteractable());
 
-            hover.transform.position = menuInteractables[hovered].transform.position;
+            menuInteractables[hovered].Hover();
         }
         else
             GetCurrent().NavigateUp();
@@ -62,7 +67,18 @@ public class SettingsController : SubMenuAbstract
         gameObject.SetActive(true);
         SetCurrent(this);
         hovered = 0;
-        hover.transform.position = menuInteractables[hovered].transform.position;
+
+        while (!menuInteractables[hovered].GetInteractable())
+        {
+            hovered++;
+            if (hovered >= menuInteractables.Length)
+                hovered = 0;
+        }
+
+        foreach (MenuInteractableAbstract interactable in menuInteractables)
+            interactable.Unhover();
+
+        menuInteractables[hovered].Hover();
     }
 
     public override void Select()
