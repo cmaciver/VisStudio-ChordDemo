@@ -74,7 +74,7 @@ public class AudioController
             new Note.Name[][] { new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.A },
                                 new Note.Name[] { Note.Name.A, Note.Name.C, Note.Name.E, Note.Name.G } },
             new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },
-                                new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F, Note.Name.B } } });
 
     private static readonly Mode hmajor = new(
         new Note.Name[][][] {
@@ -125,7 +125,7 @@ public class AudioController
             new Note.Name[][] { new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.Ab },
                                 new Note.Name[] { Note.Name.Ab, Note.Name.C, Note.Name.Eb, Note.Name.G } },
             new Note.Name[][] { new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.B },     // this kind of bass note override does work!
-                                new Note.Name[] { Note.Name.B, Note.Name.D, Note.Name.G, Note.Name.A } } });
+                                new Note.Name[] { Note.Name.G, Note.Name.B, Note.Name.D, Note.Name.F, Note.Name.B } } });
 
 
     private static readonly Mode phrygiand = new(
