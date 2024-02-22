@@ -12,9 +12,9 @@ public abstract class ToggleAbstract : MenuInteractableAbstract
     {
         if (current > 0)
         {
-            backgrounds[current].SetActive(true);
-            current--;
             backgrounds[current].SetActive(false);
+            current--;
+            backgrounds[current].SetActive(true);
             SwitchTo(current);
         }
     }
@@ -23,20 +23,20 @@ public abstract class ToggleAbstract : MenuInteractableAbstract
     {
         if (current < backgrounds.Length - 1)
         {
-            backgrounds[current].SetActive(true);
-            current++;
             backgrounds[current].SetActive(false);
+            current++;
+            backgrounds[current].SetActive(true);
             SwitchTo(current);
         }
     }
 
     public override void Select()
     {
-        backgrounds[current].SetActive(true);
+        backgrounds[current].SetActive(false);
         current++;
         if (current >= backgrounds.Length)
             current = 0;
-        backgrounds[current].SetActive(false);
+        backgrounds[current].SetActive(true);
         SwitchTo(current);
     }
 

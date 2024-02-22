@@ -13,7 +13,7 @@ public class VolumeSlider : SliderAbstract
 
     public override void SwitchTo(int index)
     {
-        menuController.volume = index / 8.0f;
-        AudioListener.volume = menuController.volume * 0.5f;
+        menuController.volume = Mathf.Pow(2, (index - 8) * 0.5f);
+        StartCoroutine(menuController.Fade(menuController.volume * 0.5f));
     }
 }

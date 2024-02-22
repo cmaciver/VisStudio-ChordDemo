@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +8,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] SubMenuAbstract head;
     [SerializeField] SubMenuAbstract[] other;
 
-    public float volume = 0.75f;
+    public float volume = 0.5f;
 
     public void Update()
     {
@@ -54,7 +55,7 @@ public class MenuController : MonoBehaviour
         menuCanvas.SetActive(true);
         head.Open();
 
-        AudioListener.volume = volume * 0.5f;
+        StartCoroutine(Fade(volume * 0.5f));
     }
 
     private void Close()
@@ -64,7 +65,7 @@ public class MenuController : MonoBehaviour
 
         menuCanvas.SetActive(false);
 
-        AudioListener.volume = volume;
+        StartCoroutine(Fade(volume));
     }
 
     public void NavigateUp()
@@ -102,5 +103,26 @@ public class MenuController : MonoBehaviour
         if (menuCanvas.activeSelf)
             if (head.Back())
                 Close();
+    }
+
+    private int fadeIndex = 0;
+
+    public IEnumerator Fade(float targetVolume)
+    {
+        float duration = 0.5f;
+        float initialVolume = AudioListener.volume;
+        float localIndex = ++fadeIndex;
+
+        for (float currentTime = Time.deltaTime; currentTime < duration; currentTime += Time.deltaTime)
+        {
+            if (localIndex != fadeIndex)
+                yield break;
+
+            AudioListener.volume = Mathf.Lerp(initialVolume, targetVolume, currentTime / duration);
+
+            yield return null;
+        }
+
+        AudioListener.volume = targetVolume;
     }
 }

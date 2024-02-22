@@ -372,7 +372,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &93663476
 RectTransform:
   m_ObjectHideFlags: 0
@@ -621,7 +621,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 368989795}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   valueField: {fileID: 1948425773}
 --- !u!1 &211135874
 GameObject:
@@ -677,7 +676,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 641273785}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   credits: {fileID: 1130823198}
 --- !u!1 &277857954
 GameObject:
@@ -2076,7 +2074,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 1342446329}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   valueField: {fileID: 925764546}
 --- !u!4 &629170865 stripped
 Transform:
@@ -3265,7 +3262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 1151245851}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   knob: {fileID: 1151245848}
   menuController: {fileID: 1287620177}
 --- !u!1 &925764544
@@ -4372,7 +4368,7 @@ MonoBehaviour:
   head: {fileID: 463396105}
   other:
   - {fileID: 1130823198}
-  volume: 0.75
+  volume: 0.5
 --- !u!1 &1304500712
 GameObject:
   m_ObjectHideFlags: 0
@@ -5128,7 +5124,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 2061841605}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   backgrounds:
   - {fileID: 93663475}
   - {fileID: 2010978065}
@@ -5851,7 +5846,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   hoverObject: {fileID: 1374182065}
-  hoverColor: {r: 1, g: 1, b: 0, a: 1}
   knob: {fileID: 1374182062}
 --- !u!1 &1948425771
 GameObject:
@@ -6102,7 +6096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2010978066
 RectTransform:
   m_ObjectHideFlags: 0

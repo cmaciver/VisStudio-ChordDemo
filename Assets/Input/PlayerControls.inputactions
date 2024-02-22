@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "gyro0",
+                    "type": "Value",
+                    "id": "ad8bddc8-c89e-44b8-a672-5a3d9dc7a3aa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -38,7 +47,7 @@
                     "name": "",
                     "id": "22e25e80-726b-4383-a938-86ece47b9ec6",
                     "path": "<Gamepad>/start",
-                    "interactions": "",
+                    "interactions": "Tap(duration=1)",
                     "processors": "",
                     "groups": "Any",
                     "action": "Recenter",
@@ -48,8 +57,8 @@
                 {
                     "name": "",
                     "id": "559a1b08-30b4-4ff1-8405-19c02c89f64d",
-                    "path": "<Gamepad>/select",
-                    "interactions": "",
+                    "path": "<Gamepad>/start",
+                    "interactions": "SlowTap(duration=1)",
                     "processors": "",
                     "groups": "Any",
                     "action": "ChangeScheme",
@@ -110,6 +119,17 @@
                     "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "94660fef-fc44-4691-810c-8c4f088a7932",
+                    "path": "<Gamepad>/gyro",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "gyro0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
